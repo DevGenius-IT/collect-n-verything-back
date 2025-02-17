@@ -1,8 +1,8 @@
 <a href="https://https://github.com/DevGenius-IT">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo-desktop-small.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo-desktop-small.png">
-    <img alt="Fiches Pedagogiques" src="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo-desktop-small.png" width="100%" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo.svg">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo.svg">
+    <img alt="Fiches Pedagogiques" src="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo.svg" width="100%" style="max-width: 500px;" />
   </picture>
 </a>
 

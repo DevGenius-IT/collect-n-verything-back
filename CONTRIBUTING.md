@@ -1,10 +1,10 @@
-# Contributing - Collect & Verything Back
+# Contributing - Collect & Verything
 
 Thanks for your interest in contributing to Collect & Verything. We're happy to have you here.
 
 Please take a moment to review this document before submitting your first pull request. We also strongly recommend that you check for open issues and pull requests to see if someone else is working on something similar.
 
-If you need any help, feel free to reach out to [@FlippadTeam](https://flippad.fr).
+If you need any help, feel free to reach out to [@DevGenius-IT](https://github.com/DevGenius-IT).
 
 ## Table of Contents 📚
 
@@ -18,6 +18,10 @@ If you need any help, feel free to reach out to [@FlippadTeam](https://flippad.f
   - [Create a new Branch](#create-a-new-branch)
   - [Install dependencies](#install-dependencies)
   - [Run the project](#run-the-project)
+- [Documentation](#documentation-)
+- [Branches Convention](#branches-convention-)
+  - [Naming Convention](#naming-convention-)
+  - [Examples](#examples)
 - [Commit Convention](#commit-convention-)
   - [Commits](#commits)
     - [Emojis](#emojis)
@@ -32,7 +36,7 @@ If you need any help, feel free to reach out to [@FlippadTeam](https://flippad.f
 
 ## About this repository 📁
 
-This repository is a Adonis API RESTful application that serves as the backend for the Collect & Verything application. It is built using the Adonis Framework and follows the RESTful API conventions.
+This repository is a Laravel API RESTful application that serves as the backend for the Collect & Verything application. It is built using the Laravel framework and follows the RESTful API conventions.
 
 ## Structure 🏗️
 
@@ -40,43 +44,58 @@ This repository is structured as follows:
 
 ```
 ├── app
-      ├── exceptions
-      ├── middleware
-      └── models
-├── bin
+      ├── Components
+      ├── Http/Modules
+            ├── Admin
+            └── Authentication
+      ├── Models
+      ├── Providers
+      ├── Services
+      └── Utils
+            ├── OAuth
+            ├── Recovery
+            └── Rules
+├── bootstrap
 ├── config
 ├── database
-├── docs
-├── start
-├── .editorconfig
-├── .env.example
-├── ace.js
-├── adonisrc.ts
-├── package.json
-├── package-lock.json
+      ├── factories
+      ├── migrations
+      └── seeders
+├── lang
+      ├── en
+      └── fr
+├── public
+├── routes
+├── storage
+├── tests
+├── composer.json
+├── composer.lock
 ├── docker-compose.yml
-└── tsconfig.json
+├── docker-compose.testing.yml
+└── phpunit.xml
 ```
 
-| Path                 | Description                                                |
-| -------------------- | ---------------------------------------------------------- |
-| `app`                | Contains the main application code                         |
-| `app/exceptions`     | Contains the custom exceptions                             |
-| `app/middleware`     | Contains the middleware                                     |
-| `app/models`         | Contains the models                                         |
-| `bin`                | Contains the binary files                                   |
-| `config`             | Contains the configuration files                            |
-| `database`           | Contains the database migrations and seeds                  |
-| `docs`               | Contains the documentation files                            |
-| `start`              | Contains the start files                                    |
-| `.editorconfig`      | Contains the editor configuration file                      |
-| `.env.example`       | Contains the environment variables example file             |
-| `ace.js`             | Contains the ace file                                       |
-| `adonisrc.ts`        | Contains the adonis configuration file                      |
-| `package.json`       | Contains the npm package file                               |
-| `package-lock.json`  | Contains the npm package lock file                          |
-| `docker-compose.yml` | Contains the docker compose file                            |
-| `tsconfig.json`      | Contains the typescript configuration file                  |
+| Path                         | Description                                                |
+| ---------------------------- | ---------------------------------------------------------- |
+| `app`                        | Contains the main application code                         |
+| `app/Components`             | Contains the components of the application                 |
+| `app/Http/Modules`           | Contains the modules of the application                    |
+| `app/Providers`              | Contains the service providers of the application          |
+| `app/Services`               | Contains the services of the application                   |
+| `app/Utils`                  | Contains the utility classes of the application            |
+| `bootstrap`                  | Contains the Laravel bootstrap files                       |
+| `config`                     | Contains the configuration files of the application        |
+| `database`                   | Contains the database migrations, factories, and seeders   |
+| `lang`                       | Contains the language files of the application             |
+| `public`                     | Contains the public files of the application               |
+| `routes`                     | Contains the routes of the application                     |
+| `storage`                    | Contains the storage files of the application              |
+| `tests`                      | Contains the tests of the application                      |
+| `composer.json`              | Contains the composer dependencies of the application      |
+| `composer.lock`              | Contains the composer lock file of the application         |
+| `docker-compose.yml`         | Contains the docker compose file of the application        |
+| `docker-compose.testing.yml` | Contains the docker compose file for testing               |
+| `phpunit.xml`                | Contains the PHPUnit configuration file of the application |
 
 ## Testing 🧪
 
@@ -110,18 +129,46 @@ git checkout -b my-new-branch
 ### Install dependencies
 
 ```bash
-npm install
+composer install
 ```
 
 ### Run the project
 
 ```bash
-ace serve --watch
+php artisan serve
 ```
 
 ## Documentation 📖
 
 Documentation is written using [MDX](https://mdxjs.com). You can find the documentation files in the `docs` directory.
+
+## Branches Convention 🌿
+
+Main branches:
+- `main`: Main branch
+- `dev`: Development branch
+
+### Naming Convention 📛
+
+```bash
+<type>/#<issue-number>-<short-description>
+```
+
+- `type`: Type of the branch
+- `issue-number`: Issue number
+- `short-description`: Short description of the issue or issue title
+
+### Examples
+
+- `feat/#1-add-new-feature`
+- `fix/#2-fix-typo`
+- `docs/#3-update-readme`
+- `chore/#4-update-dependencies`
+- `test/#5-add-new-test`
+- `ci/#6-update-github-actions`
+- `refactor/#7-refactor-code`
+- `build/#8-update-docker-compose`
+- `perf/#10-improve-performance`
 
 ## Commit Convention 📝
 
@@ -252,9 +299,9 @@ e.g. `<major>.<minor>.<patch>`
 ---
 
 <p align="center">
-	Copyright &copy; 2024-present <a href="https://github.com/FlippadTeam" target="_blank">@DevGenius-IT</a>
+	Copyright &copy; 2024-present <a href="https://github.com/DevGenius-IT" target="_blank">@DevGenius-IT</a>
 </p>
 
 <p align="center">
-	<a href="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/LICENSE.md"><img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8"/></a>
+	<a href="https://github.com/DevGenius-IT/jewely-brand-product-configurator/blob/main/LICENSE.md"><img src="https://img.shields.io/static/v1.svg?style=for-the-badge&label=License&message=MIT&logoColor=d9e0ee&colorA=363a4f&colorB=b7bdf8"/></a>
 </p>

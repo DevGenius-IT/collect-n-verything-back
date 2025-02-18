@@ -1,15 +1,15 @@
-<a href="https://github.com/DevGenius-IT/collect-n-verything-back">
+<a href="https://https://github.com/DevGenius-IT">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo-desktop.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/assets/logo-desktop.png">
-    <img alt="Collect & Verything - Back" src="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/assets/logo-desktop.png" width="100%" />
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo-desktop-small.png" style="max-width: 500px;">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo-desktop-small.png" style="max-width: 500px;">
+    <img alt="Fiches Pedagogiques" src="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/public/logo-desktop-small.png" width="100%" style="max-width: 500px;" />
   </picture>
 </a>
 
-<h1 align="center">Collect & Verything - Back</h1>
+<h1 align="center">Collect & Verything</h1>
 
 <p align="center">
-  A Adonis API RESTful application that serves as the backend for the Collect & Verything application. It is built using the Adonis Framework and follows the RESTful API conventions.
+An Laravel API RESTful application that serves as the backend for the Collect & Verything application. It is built using the Laravel framework and follows the RESTful API conventions.
 </p>
 
 ## Documentation 📝
@@ -24,7 +24,7 @@ Please read the [contributing guide](https://github.com/DevGenius-IT/collect-n-v
 
 We have organized our work into a single project to streamline development and ensure clarity. You can follow the progress and contribute through the link below:
 
-- [Collect & Verything - Back](https://github.com/orgs/DevGenius-IT/projects/2)
+- [API - Collect & Verything Project](https://github.com/orgs/DevGenius-IT/projects/2)
 
 ---
 

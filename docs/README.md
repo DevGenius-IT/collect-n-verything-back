@@ -5,26 +5,34 @@
     - [System Requirements](#system-requirements-) 🖥️
 - [Installation](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/INSTALLATION.md) 💾
 - [Usage](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md) 🔧
- - [Routing](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#routing-) 
+  - [API Documentation](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#api-documentation-) 📖
+  - [API Endpoints](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#api-endpoints-) 📡
+    - [Authentication](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#authentication-) 🔐
+    - [Admin](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#admin-) 🛡️
+      - [Users](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#users-) 👤
+      - [Roles](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#roles-) 🎭
+      - [Addresses](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#addresses-) 🏠
+  - [Postman](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#postman-) 📬
+- [Tests](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/TESTS.md) 🧪
 
 ## Getting Started 🚀
 
-Welcome to the Collect & Verything API RESTful application. This application serves as the backend for the Collect & Verything application. It is built using the Adonis framework and follows the RESTful API conventions.
+Welcome to the Fiches Pedagogiques API RESTful application. This application serves as the backend for the Collect & Verything application. It is built using the Laravel framework and follows the RESTful API conventions.
 
 ### Requirements 📋
 
 #### System Requirements 🖥️
-- Node.js >= 20.6.0
+
+- PHP >= 8.2.x
+- Composer
+- Docker (may be optional)
 
 <details>
 <summary>Visual Studio Code</summary>
 
 Extensions:
-  - Auto Close Tag
-  - Auto Rename Tag
-  - TypeScript Support
-  - ESLint
-  - Prettier
+
+- PHP Intelephense
 
 </details>
 
@@ -36,7 +44,7 @@ Please read the [contributing guide](https://github.com/DevGenius-IT/collect-n-v
 
 We have organized our work into a single project to streamline development and ensure clarity. You can follow the progress and contribute through the link below:
 
-- [API - Fiches Pédagogiques Project](https://github.com/orgs/DevGenius-IT/projects/1)
+- [API - Collect & Verything Project](https://github.com/orgs/DevGenius-IT/projects/2)
 
 ---
 

@@ -5,11 +5,7 @@ namespace App\Http\Modules\Admin\Users;
 use App\Components\ExceptionHandler;
 use App\Components\Repository;
 use App\Enums\RolesEnum;
-use App\Helpers\SchoolsHelper;
-use App\Helpers\SectionsHelper;
-use App\Helpers\ShopsHelper;
 use App\Helpers\UsersHelper;
-use App\Helpers\UserTypesHelper;
 use App\Http\Modules\Admin\Users\Exceptions\UserRepositoryException;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -22,11 +18,7 @@ use Illuminate\Support\Facades\DB;
  * @extends Repository
  *
  * *****Traits*****
- * @use SchoolsHelper
- * @use SectionsHelper
- * @use ShopsHelper
  * @use UsersHelper
- * @use UserTypesHelper
  *
  ******Methods*******
  * @method public __construct(User $model, UserRessource $ressource)
@@ -36,7 +28,7 @@ use Illuminate\Support\Facades\DB;
  */
 class UserRepository extends Repository
 {
-  use SchoolsHelper, SectionsHelper, ShopsHelper, UsersHelper, UserTypesHelper;
+  use UsersHelper;
 
   public function __construct(User $model, UserRessource $ressource)
   {
@@ -54,20 +46,11 @@ class UserRepository extends Repository
   {
     try {
       return DB::transaction(function () use ($data) {
-        $schools = $this->extractSchools($data);
-        $sections = $this->extractSections($data);
-        $shops = $this->extractShops($data);
-        $userTypes = $this->extractUserTypes($data);
         $this->hashPassword($data);
         $this->stringifyAgeRange($data);
 
         $user = $this->model->create($data);
         $this->assignRoles($user, $data);
-
-        $this->syncUserTypes($user, $userTypes);
-        $this->syncSchools($user, $schools);
-        $this->syncSections($user, $sections);
-        $this->syncShops($user, $shops);
 
         return $user;
       });
@@ -91,23 +74,6 @@ class UserRepository extends Repository
 
       DB::transaction(function () use ($user, $data) {
         $this->assignRoles($user, $data);
-
-        if (isset($data["schools"])) {
-          $this->syncSchools($user, $this->extractSchools($data));
-        }
-
-        if (isset($data["sections"])) {
-          $this->syncSections($user, $this->extractSections($data));
-        }
-
-        if (isset($data["shops"])) {
-          $this->syncShops($user, $this->extractShops($data));
-        }
-        
-        if (isset($data["user_types"])) {
-          $this->syncUserTypes($user, $this->extractUserTypes($data));
-        }
-
         $this->hashPassword($data);
         $this->stringifyAgeRange($data);
         

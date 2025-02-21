@@ -5,20 +5,21 @@ namespace App\Http\Modules\Authentication;
 use App\Components\Controller;
 use App\Components\CRUDRules;
 use App\Components\ExceptionHandler;
-use App\Enums\RolesEnum;
+use App\Components\Ressource;
 use App\Http\Modules\Admin\Users\UserRepository;
-use App\Http\Modules\Admin\Users\UserRessource;
 use App\Http\Modules\Authentication\Exceptions\AuthenticationException;
 use App\Http\Modules\Authentication\Exceptions\RecoveryException;
 use App\Http\Modules\Authentication\Exceptions\Rules\AuthResetPasswordValidateRulesException;
 use App\Http\Modules\Authentication\Exceptions\Rules\AuthSignUpRulesValidateException;
-use Spatie\Permission\Models\Role;
+use App\Http\Requests\SigninRequest;
+use App\Http\Requests\SignupRequest;
 use App\Models\User;
 use App\Services\OAuthService;
 use App\Services\RecoveryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
@@ -39,7 +40,7 @@ use Illuminate\Support\Facades\Validator;
  * @property RecoveryService $recoveryService
  *
  * *****Methods*******
- * @method void __construct(UserRepository $repository, UserRessource $ressource, User $model, OAuthService $oAuthService)
+ * @method void __construct(UserRepository $repository, User $model, OAuthService $oAuthService)
  * @method JsonResponse signUp(Request $request, AuthSignUpRulesValidateException $exception)
  * @method array initializeNewUser(array $data)
  * @method string generateToken(User $user, string $device = null)
@@ -63,13 +64,6 @@ class AuthController extends Controller
   protected User $model;
 
   /**
-   * The service instance.
-   *
-   * @var CRUDRules
-   */
-  protected CRUDRules $rules;
-
-  /**
    * The OAuth service instance.
    *
    * @var OAuthService
@@ -83,27 +77,34 @@ class AuthController extends Controller
    */
   protected RecoveryService $recoveryService;
 
+  protected UserRepository $userRepository;
+
+  /**
+   * The ressource instance.
+   *
+   * @var Ressource
+   */
+  protected Ressource $ressource;
   /**
    * Create a new controller instance.
    *
    * @param UserRepository $repository
-   * @param UserRessource $ressource
    * @param User $model
    * @param OAuthService $oAuthService
    * @return void
    */
   public function __construct(
     UserRepository $repository,
-    UserRessource $ressource,
+    Ressource $ressource,
     User $model,
     OAuthService $oAuthService,
     RecoveryService $recoveryService
   ) {
     parent::__construct($repository, $ressource);
     $this->model = $model;
-    $this->rules = new CRUDRules("user");
     $this->oAuthService = $oAuthService;
     $this->recoveryService = $recoveryService;
+    $this->userRepository = $repository;
   }
 
   /**
@@ -113,71 +114,23 @@ class AuthController extends Controller
    * @return JsonResponse
    */
   public function signUp(
-    Request $request,
-    AuthSignUpRulesValidateException $exception
+    SignupRequest $request
   ): JsonResponse {
-    try {
-      $data = $this->initializeNewUser($request->all());
-      $validatedParams = $this->rules->store($data, $exception);
+    // Valide les données avant de les envoyer au repository (validations faites au préalable)
+    $data = $request->only(['username', 'lastname', 'firstname', 'email', 'password', 'password_confirmation', 'phone_number', 'type', 'stripe_id']);
 
-      $user = $this->repository->store($validatedParams);
-      $user = $this->model->find($user["id"]);
+    // Appel à la méthode create() du repository
+    $user = $this->userRepository->create($data);
 
-      $token = $this->generateToken($user);
+    // Générer un token d'accès personnel
+    $token = $user->createToken('auth_token')->plainTextToken;
 
-      $user = $this->ressource->toArray($user, null);
-
-      return response()->json(
-        [
-          "token" => $token,
-          "user" => $user,
-        ],
-        201
-      );
-    } catch (ExceptionHandler $e) {
-      return $e->render($request);
-    }
-  }
-
-  /**
-   * Validate the data for a new User.
-   *
-   * @param array $data
-   * @return array
-   * @throws AuthSignUpRulesValidateException
-   */
-  private function initializeNewUser(array $data): array
-  {
-    try {
-      if (isset($data["roles"])) {
-        unset ($data["roles"]);
-      }
-
-      if (!isset($data["username"]) && isset($data["email"])) {
-        // keep the starting part of the email address before the @ symbol
-        $data["username"] = explode("@", $data["email"])[0]; // e.g. john.doe from john.doe@exemple.com
-      }
-
-      return $data;
-    } catch (AuthSignUpRulesValidateException $e) {
-      throw new AuthSignUpRulesValidateException(
-        __("authentication.sign_up_data_failed"),
-        null,
-        400
-      );
-    }
-  }
-
-  /**
-   * Generate a token for the user.
-   *
-   * @param User $user
-   * @param string|null $device
-   * @return string
-   */
-  private function generateToken(User $user, string $device = null): string
-  {
-    return $user->createToken($device ?? "api_token")->plainTextToken;
+    // Retourner l'utilisateur avec le token
+    return response()->json([
+      'message' => 'Utilisateur créé avec succès',
+      'user' => $user,
+      'token' => $token,
+    ], 201);
   }
 
   /**
@@ -186,27 +139,24 @@ class AuthController extends Controller
    * @param Request $request
    * @return JsonResponse
    */
-  public function signIn(Request $request): JsonResponse
+  public function signIn(SigninRequest $request): JsonResponse
   {
-    try {
-      $credentials = $request->only("email", "password");
-      $device = $request->input("device");
+    $user = $this->userRepository->findByEmailOrUsername(($request->email == null) ? $request->username : $request->email);
 
-      if (!auth()->guard("web")->attempt($credentials)) {
-        throw new AuthenticationException(__("authentication.invalid_credentials"), null, 401);
-      }
-
-      $token = $this->generateToken(auth()->guard("web")->user(), $device);
-
-      $user = $this->repository->show(auth()->guard("web")->id());
+    if ($user && Hash::check($request->password, $user->password)) {
+      $token = $user->createToken('auth_token')->plainTextToken;
 
       return response()->json([
-        "token" => $token,
-        "user" => $this->ressource->toArray($user, null),
-      ]);
-    } catch (ExceptionHandler $e) {
-      return $e->render($request);
+        'message' => 'Connexion réussie.',
+        'token' => $token,
+        'user' => $user,
+      ], 200);
     }
+
+    // Retourner une erreur si la connexion échoue
+    return response()->json([
+      'message' => 'Identifiants incorrects.',
+    ], 401);
   }
 
   /**

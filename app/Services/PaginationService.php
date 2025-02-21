@@ -42,14 +42,14 @@ class PaginationService extends Pagination
    * @param  callable  $callback
    * @return void
    */
-  public static function define(string $name, Ressource $ressource): void
-  {
-    self::$configurations[$name] = function () use ($ressource) {
-      $paginationService = new PaginationService();
-      $paginationService->setRessource($ressource);
-      return $paginationService;
-    };
-  }
+  // public static function define(string $name, Ressource $ressource): void
+  // {
+  //   self::$configurations[$name] = function () use ($ressource) {
+  //     $paginationService = new PaginationService();
+  //     $paginationService->setRessource($ressource);
+  //     return $paginationService;
+  //   };
+  // }
 
   /**
    * Get a pagination configuration by name.
@@ -57,10 +57,10 @@ class PaginationService extends Pagination
    * @param  string  $name
    * @return callable|null
    */
-  public static function getConfiguration(string $name): ?PaginationService
-  {
-    return isset(self::$configurations[$name]) ? self::$configurations[$name]() : null;
-  }
+  // public static function getConfiguration(string $name): ?PaginationService
+  // {
+  //   return isset(self::$configurations[$name]) ? self::$configurations[$name]() : null;
+  // }
 
   /**
    * Paginate a list of items.
@@ -71,129 +71,128 @@ class PaginationService extends Pagination
    * @return array
    * @throws ExceptionHandler
    */
-  public function paginate(array $params, Repository $repository, string $url): array
-  {
-    $limit = isset($params["limit"]) ? (int) $params["limit"] : 50;
-    $page = isset($params["page"]) ? (int) $params["page"] : 1;
-    $orderBy = $params["orderBy"] ?? null;
-    $order = $params["order"] ?? null;
-    $trash = $params["trash"] ?? null;
-    $fields = $params["fields"] ?? null;
+  // public function paginate(array $params, Repository $repository, string $url): array
+  // {
+  //   $limit = isset($params["limit"]) ? (int) $params["limit"] : 50;
+  //   $page = isset($params["page"]) ? (int) $params["page"] : 1;
+  //   $orderBy = $params["orderBy"] ?? null;
+  //   $order = $params["order"] ?? null;
+  //   $trash = $params["trash"] ?? null;
+  //   $fields = $params["fields"] ?? null;
 
-    $params = $this->cleanParams($params);
+  //   $params = $this->cleanParams($params);
 
-    $count = $repository->count([
-      "filters" => $params,
-      "trash" => $trash,
-      "limit" => $limit,
-    ]);
+  //   $count = $repository->count([
+  //     "filters" => $params,
+  //     "trash" => $trash,
+  //     "limit" => $limit,
+  //   ]);
 
-    $pagesCount = $this->getPagesCount($count, $limit);
-    $currentPage = $this->getCurrentPage($page, $pagesCount);
+  //   $pagesCount = $this->getPagesCount($count, $limit);
+  //   $currentPage = $this->getCurrentPage($page, $pagesCount);
 
-    $items = $this->ressource->toArrayCollection(
-      $repository->index([
-        "filters" => $params,
-        "limit" => $limit,
-        "offset" => $this->getOffset($currentPage, $limit),
-        "orderBy" => $orderBy,
-        "order" => $order,
-        "trash" => $trash,
-        "fields" => $fields,
-      ]),
-      $fields
-    );
+  //   $items = $this->ressource->toArrayCollection(
+  //     $repository->index([
+  //       "filters" => $params,
+  //       "limit" => $limit,
+  //       "offset" => $this->getOffset($currentPage, $limit),
+  //       "orderBy" => $orderBy,
+  //       "order" => $order,
+  //       "trash" => $trash,
+  //       "fields" => $fields,
+  //     ]),
+  //     $fields
+  //   );
 
-    $pages = $this->getPagesUrls(
-      $pagesCount,
-      $currentPage,
-      $limit,
-      $orderBy,
-      $order,
-      $trash,
-      null,
-      $url,
-      $params
-    );
+  //   $pages = $this->getPagesUrls(
+  //     $pagesCount,
+  //     $currentPage,
+  //     $limit,
+  //     $orderBy,
+  //     $order,
+  //     $trash,
+  //     null,
+  //     $url,
+  //     $params
+  //   );
 
-    return [
-      "items" => $items,
-      "meta" => [
-        "total" => $count,
-        "pages_count" => $pagesCount,
-        "current_page" => $currentPage,
-        "limit" => $limit,
-        "pages" => $pages,
-        "selected_fields" => $fields,
-      ],
-    ];
-  }
+  //   return [
+  //     "items" => $items,
+  //     "meta" => [
+  //       "total" => $count,
+  //       "pages_count" => $pagesCount,
+  //       "current_page" => $currentPage,
+  //       "limit" => $limit,
+  //       "pages" => $pages,
+  //       "selected_fields" => $fields,
+  //     ],
+  //   ];
+  // }
 
-  public function paginateSearch(
-    array $params,
-    SearchRepository $repository,
-    Ressource $ressource,
-    string $url
-  ): array {
-    $this->setRessource($ressource);
+  // public function paginateSearch(
+  //   array $params,
+  //   Ressource $ressource,
+  //   string $url
+  // ): array {
+  //   $this->setRessource($ressource);
 
-    $limit = isset($params["limit"]) ? (int) $params["limit"] : 50;
-    $page = isset($params["page"]) ? (int) $params["page"] : 1;
-    $orderBy = $params["orderBy"] ?? null;
-    $order = $params["order"] ?? null;
-    $trash = $params["trash"] ?? null;
-    $fields = $params["fields"] ?? null;
-    $q = isset($params["q"]) ? $params["q"] : null;
+  //   $limit = isset($params["limit"]) ? (int) $params["limit"] : 50;
+  //   $page = isset($params["page"]) ? (int) $params["page"] : 1;
+  //   $orderBy = $params["orderBy"] ?? null;
+  //   $order = $params["order"] ?? null;
+  //   $trash = $params["trash"] ?? null;
+  //   $fields = $params["fields"] ?? null;
+  //   $q = isset($params["q"]) ? $params["q"] : null;
 
-    $params = $this->cleanParams($params);
+  //   $params = $this->cleanParams($params);
 
-    $count = $repository->count([
-      "q" => $q,
-      "trash" => $trash,
-      "limit" => $limit,
-    ]);
+  //   // $count = $repository->count([
+  //   //   "q" => $q,
+  //   //   "trash" => $trash,
+  //   //   "limit" => $limit,
+  //   // ]);
 
-    $pagesCount = $this->getPagesCount($count, $limit);
-    $currentPage = $this->getCurrentPage($page, $pagesCount);
+  //   $pagesCount = $this->getPagesCount($count, $limit);
+  //   $currentPage = $this->getCurrentPage($page, $pagesCount);
 
-    $items = $this->ressource->toArrayCollection(
-      $repository->search([
-        "q" => $q,
-        "page" => $page,
-        "limit" => $limit,
-        "offset" => $this->getOffset($currentPage, $limit),
-        "orderBy" => $orderBy,
-        "order" => $order,
-        "trash" => $trash,
-        "fields" => $fields,
-      ]),
-      $fields
-    );
+  //   $items = $this->ressource->toArrayCollection(
+  //     $repository->search([
+  //       "q" => $q,
+  //       "page" => $page,
+  //       "limit" => $limit,
+  //       "offset" => $this->getOffset($currentPage, $limit),
+  //       "orderBy" => $orderBy,
+  //       "order" => $order,
+  //       "trash" => $trash,
+  //       "fields" => $fields,
+  //     ]),
+  //     $fields
+  //   );
 
-    $pages = $this->getPagesUrls(
-      $pagesCount,
-      $currentPage,
-      $limit,
-      $orderBy,
-      $order,
-      $trash,
-      $q,
-      $url,
-      $params
-    );
+  //   $pages = $this->getPagesUrls(
+  //     $pagesCount,
+  //     $currentPage,
+  //     $limit,
+  //     $orderBy,
+  //     $order,
+  //     $trash,
+  //     $q,
+  //     $url,
+  //     $params
+  //   );
 
-    return [
-      "items" => $items,
-      "meta" => [
-        "total" => $count,
-        "pages_count" => $pagesCount,
-        "current_page" => $currentPage,
-        "limit" => $limit,
-        "pages" => $pages,
-        "selected_fields" => $fields ?? null,
-      ],
-    ];
-  }
+  //   return [
+  //     "items" => $items,
+  //     "meta" => [
+  //       "total" => $count,
+  //       "pages_count" => $pagesCount,
+  //       "current_page" => $currentPage,
+  //       "limit" => $limit,
+  //       "pages" => $pages,
+  //       "selected_fields" => $fields ?? null,
+  //     ],
+  //   ];
+  // }
 
   /**
    * Clean the params array.

@@ -39,7 +39,6 @@ class UserUpdateValidateRulesException extends ExceptionHandler
         "advantage_number" => __("users.rules.advantage_number"),
         "age_range" => __("users.rules.age_range"),
         "age_range.*" => __("users.rules.age_range"),
-        "address_id" => __("users.rules.address_id"),
         "workplace_id" => __("users.rules.workplace_id"),
         "roles" => __("users.rules.roles"),
         "roles.*" => __("users.rules.roles_item"),

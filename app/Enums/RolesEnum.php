@@ -17,7 +17,7 @@ enum RolesEnum: string
   // Base roles
   case SUPER_ADMIN = "super-admin";
   case ADMIN = "admin";
-  case VIEWER = "viewer";
+  case USER = "user";
 
   /**
    * Get the display name of the role.
@@ -30,10 +30,18 @@ enum RolesEnum: string
     return match ($this) {
       self::SUPER_ADMIN => __("roles.super-admin"),
       self::ADMIN => __("roles.admin"),
-      self::VIEWER => __("roles.viewer"),
+      self::USER => __("roles.user"),
     };
   }
 
+  public static function getValues()
+  {
+      return [
+          self::ADMIN,
+          self::SUPER_ADMIN,
+          self::USER,
+      ];
+  }
   /**
    * Convert a role to a format that can be used in the code.
    *
@@ -80,7 +88,7 @@ enum RolesEnum: string
   {
     return array_map(
       fn($role) => constant("self::" . self::formatRole($role)),
-      array_filter(config("permission.roles.base"), fn($role) => $role !== self::VIEWER->value)
+      array_filter(config("permission.roles.base"), fn($role) => $role !== self::USER->value)
     );
   }
 

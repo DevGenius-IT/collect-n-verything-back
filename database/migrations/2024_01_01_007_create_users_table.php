@@ -13,32 +13,21 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('lastname')->nullable();
-            $table->string('firstname')->nullable();
             $table->string('username')->unique();
+            $table->string('lastname');
+            $table->string('firstname');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('reset_password_token')->nullable();
-            $table->dateTime('password_requested_at')->nullable();
             $table->string('phone_number')->nullable();
-            $table->boolean('enabled')->default(true);
-            $table->boolean('has_newsletter')->default(false);
-            $table->string('google_id')->nullable();
-            $table->foreignId("address_id")->nullable()->constrained()->cascadeOnDelete();
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->string('type')->default("USER");
+            $table->string('stripe_id')->nullable();
+            $table->timestamps(); //created_at, updated_at
+            $table->softDeletes(); //deleted_at
         });
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();

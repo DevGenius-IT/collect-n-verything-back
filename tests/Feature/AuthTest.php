@@ -35,7 +35,7 @@ class AuthTest extends TestCase
       "password" => "@User123",
       "password_confirmation" => "@User123",
       "advantage_number" => "",
-      "roles" => [RolesEnum::VIEWER],
+      "roles" => [RolesEnum::USER],
     ]);
 
     $response->assertStatus(201)->assertJsonStructure(["token", "user"]);

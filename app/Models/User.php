@@ -29,14 +29,12 @@ use Spatie\Permission\Traits\HasRoles;
  * @property \Carbon\Carbon $password_requested_at
  * @property string $phone_number
  * @property bool $has_newsletter
- * @property int $address_id
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  * @property \Carbon\Carbon $deleted_at
  *
  ******Relationships*******
  * @property-read Role $roles
- * @property-read Address $address
  *
  ******Methods*******
  * @method public string fullName()
@@ -49,7 +47,7 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable
 {
-  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CanResetPassword, HasRoles, UsersHelper;
+  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CanResetPassword, HasRoles;
 
   // Properties =====================================
 
@@ -70,13 +68,10 @@ class User extends Authenticatable
     "firstname",
     "username",
     "email",
-    "enabled",
     "password",
-    "password_requested_at",
     "phone_number",
-    "has_newsletter",
-    "address_id",
-    "google_id",
+    "type",
+    "stripe_id",
     "created_at",
     "updated_at",
     "deleted_at",
@@ -87,7 +82,10 @@ class User extends Authenticatable
    *
    * @var array<string>
    */
-  protected $hidden = ["password", "reset_password_token"];
+  protected $hidden = [
+    "password",
+    'remember_token'
+  ];
 
   /**
    * The attributes that should be cast.
@@ -95,9 +93,6 @@ class User extends Authenticatable
    * @var array<string, string>
    */
   protected $casts = [
-    "enabled" => "boolean",
-    "password_requested_at" => "datetime",
-    "has_newsletter" => "boolean",
     "created_at" => "datetime",
     "updated_at" => "datetime",
     "deleted_at" => "datetime",
@@ -117,13 +112,4 @@ class User extends Authenticatable
 
   // Relationships  =====================================
 
-  /**
-   * Get the address for the user.
-   *
-   * @return BelongsTo
-   */
-  public function address(): BelongsTo
-  {
-    return $this->belongsTo(Address::class)->withTrashed();
-  }
 }

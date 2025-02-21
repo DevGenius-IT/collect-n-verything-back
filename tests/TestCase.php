@@ -14,19 +14,19 @@ abstract class TestCase extends BaseTestCase
    */
   protected bool $seed = true;
 
-  /**
-   * Pagination Structure.
-   *
-   * @var array
-   */
-  protected array $paginationMetaStructure = [
-    "total",
-    "pages_count",
-    "current_page",
-    "limit",
-    "pages",
-    "selected_fields",
-  ];
+  // /**
+  //  * Pagination Structure.
+  //  *
+  //  * @var array
+  //  */
+  // protected array $paginationMetaStructure = [
+  //   "total",
+  //   "pages_count",
+  //   "current_page",
+  //   "limit",
+  //   "pages",
+  //   "selected_fields",
+  // ];
 
   /**
    * Entity structure.
@@ -98,7 +98,7 @@ abstract class TestCase extends BaseTestCase
       "items" => [
         "*" => $this->entityStructure,
       ],
-      "meta" => $this->paginationMetaStructure,
+      // "meta" => $this->paginationMetaStructure,
     ];
   }
 }

@@ -8,7 +8,6 @@
 		- [Admin](#admin-) 🛡️
 				- [Users](#users-) 👤
 				- [Roles](#roles-) 🎭
-				- [Addresses](#addresses-) 🏠
 - [Postman](#postman-) 📬
 
 ## API Documentation 📖
@@ -50,18 +49,6 @@ The API documentation is available at the following link:
 | ------- | --------- | ---------------------- | -------------------------------------------- | -------- | ---------------------- |
 | Index   | 🟢 GET    | `/admin/roles`         | `limit`, `page`, `order`, `orderBy`, `trash` | `fields` | Get all roles          |
 | Show    | 🟢 GET    | `/admin/roles/{id}`    |                                              | `fields` | Get a role by ID       |
-
-#### Addresses 🏠
-
-| Name      | Method    | Path                                | Parameters                                   | Headers           | Description             |
-| --------- | --------- | ----------------------------------- | -------------------------------------------- | ----------------- | ----------------------- |
-| Index     | 🟢 GET    | `/admin/addresses`                   | `limit`, `page`, `order`, `orderBy`, `trash` | `fields`          | Get all addresses        |
-| Show      | 🟢 GET    | `/admin/addresses/{id}`              |                                              | `fields`          | Get an address by ID     |
-| Store     | 🟡 POST   | `/admin/addresses`                   | `street`, `additional`, `locality`, `zip_code`, `city`, `department`, `country` |                   | Create a new address     |
-| Update    | 🔵 PUT    | `/admin/addresses/{id}`              | `street`, `additional`, `locality`, `zip_code`, `city`, `department`, `country` |                   | Update an address by ID  |
-| Destroy   | 🔴 DELETE | `/admin/addresses`                   | `ids`, `force`                               |                   | Delete multiple addresses |
-| Restore   | 🟣 PATCH  | `/admin/addresses/restore`           | `ids`                                        |                   | Restore multiple addresses |
-| Duplicate | 🟣 PATCH  | [`duplicate_from` and address fields] |                                              | Duplicate an address |
 
 ## Postman 📬
 

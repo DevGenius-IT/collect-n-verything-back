@@ -4,6 +4,7 @@ namespace App\Http\Modules\Admin\Users;
 
 use App\Components\ExceptionHandler;
 use App\Components\Repository;
+use App\Components\Ressource;
 use App\Enums\RolesEnum;
 use App\Helpers\SchoolsHelper;
 use App\Helpers\SectionsHelper;
@@ -14,6 +15,7 @@ use App\Http\Modules\Admin\Users\Exceptions\UserRepositoryException;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * The user repository class.
@@ -36,127 +38,51 @@ use Illuminate\Support\Facades\DB;
  */
 class UserRepository extends Repository
 {
-  use SchoolsHelper, SectionsHelper, ShopsHelper, UsersHelper, UserTypesHelper;
 
-  public function __construct(User $model, UserRessource $ressource)
+  public function __construct(User $model, Ressource $ressource)
   {
     parent::__construct($model, $ressource);
   }
 
   /**
-   * The store method.
+   * Create a new user
    *
    * @param array $data
-   * @return User|array
-   * @throws UserRepositoryException
+   * @return \App\Models\User
    */
-  public function store(array $data): User|array
+  public function create(array $data)
   {
-    try {
-      return DB::transaction(function () use ($data) {
-        $schools = $this->extractSchools($data);
-        $sections = $this->extractSections($data);
-        $shops = $this->extractShops($data);
-        $userTypes = $this->extractUserTypes($data);
-        $this->hashPassword($data);
-        $this->stringifyAgeRange($data);
+    // Crée un utilisateur avec les données fournies et retourne l'utilisateur créé
+    $user = User::create([
+      'username' => $data['username'],
+      'lastname' => $data['lastname'],
+      'firstname' => $data['firstname'],
+      'email' => $data['email'],
+      'password' => Hash::make($data['password']),  // Hachage du mot de passe
+      'phone_number' => $data['phone_number'] ?? null,
+      'type' => $data['type'] ?? 'USER',
+      'stripe_id' => $data['stripe_id'] ?? null,
+    ]);
 
-        $user = $this->model->create($data);
-        $this->assignRoles($user, $data);
-
-        $this->syncUserTypes($user, $userTypes);
-        $this->syncSchools($user, $schools);
-        $this->syncSections($user, $sections);
-        $this->syncShops($user, $shops);
-
-        return $user;
-      });
-    } catch (ExceptionHandler $e) {
-      throw new UserRepositoryException(__("users.store_failed"));
-    }
+    return $user;
   }
 
   /**
-   * The update method.
+   * Get all users.
    *
-   * @param int $id
-   * @param array $data
-   * @return User|array
-   * @throws UserRepositoryException
+   * @return \Illuminate\Database\Eloquent\Collection
    */
-  public function update(int $id, array $data): User|array
+  public function getAll()
   {
-    try {
-      $user = $this->model->findOrFail($id);
-
-      DB::transaction(function () use ($user, $data) {
-        $this->assignRoles($user, $data);
-
-        if (isset($data["schools"])) {
-          $this->syncSchools($user, $this->extractSchools($data));
-        }
-
-        if (isset($data["sections"])) {
-          $this->syncSections($user, $this->extractSections($data));
-        }
-
-        if (isset($data["shops"])) {
-          $this->syncShops($user, $this->extractShops($data));
-        }
-        
-        if (isset($data["user_types"])) {
-          $this->syncUserTypes($user, $this->extractUserTypes($data));
-        }
-
-        $this->hashPassword($data);
-        $this->stringifyAgeRange($data);
-        
-        $user->update($data);
-      });
-      return $user;
-    } catch (ExceptionHandler $e) {
-      throw new UserRepositoryException(__("users.update_failed"));
-    }
+    return User::all();  // Retourne tous les utilisateurs
   }
 
   /**
-   * The destroy method.
-   *
-   * @param array $ids
-   * @param bool $force
-   * @return JsonResponse
-   * @throws UserRepositoryException
+   * Find the user by his username or email.
+   * 
    */
-  public function destroy(array $ids, bool $force = false): JsonResponse
+  public function findByEmailOrUsername(string $identification)
   {
-    try {
-      DB::transaction(function () use ($ids, $force) {
-        $users = $force
-          ? $this->model->withTrashed()->whereIn("id", $ids)->get()
-          : $this->model->whereIn("id", $ids)->get();
-
-        foreach ($users as $user) {
-          if (
-            $user->hasRole(RolesEnum::ADMIN->value) &&
-            !auth()->guard()->user()->hasRole(RolesEnum::SUPER_ADMIN->value)
-          ) {
-            throw new UserRepositoryException(__("users.destroy_failed"));
-          }
-
-          if (auth()->guard()->user()->id === $user->id) {
-            throw new UserRepositoryException(__("users.cannot_destroy_self"));
-          }
-        }
-
-        if ($force) {
-          $this->model->withTrashed()->whereIn("id", $ids)->forceDelete();
-        } else {
-          $this->model->whereIn("id", $ids)->delete();
-        }
-      });
-      return response()->json(["message" => __("users.destroy_success")]);
-    } catch (\Exception $e) {
-      throw new UserRepositoryException(__("users.destroy_failed"));
-    }
+    return User::where('email', $identification)->orWhere('username', $identification)->first();
   }
 }

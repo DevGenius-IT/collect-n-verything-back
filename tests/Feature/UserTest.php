@@ -41,7 +41,6 @@ class UserTest extends TestCase
       "password_requested_at",
       "phone_number",
       "has_newsletter",
-      "address",
       "oAuth",
       "created_at",
       "updated_at",
@@ -92,11 +91,10 @@ class UserTest extends TestCase
       "firstname" => "John",
       "username" => "john_doe",
       "email" => "johndoe@fichespedagogiques.com",
-      "roles" => [RolesEnum::VIEWER->value],
+      "roles" => [RolesEnum::USER->value],
       "password" => "@User123",
       "phone_number" => "+1234567890",
       "has_newsletter" => true,
-      "address_id" => 9,
     ];
 
     $response = $this->withHeaders([
@@ -123,7 +121,6 @@ class UserTest extends TestCase
       "password" => "@Test123",
       "phone_number" => "+0987654321",
       "has_newsletter" => true,
-      "address_id" => 10,
     ];
 
     $response = $this->withHeaders([
@@ -192,7 +189,6 @@ class UserTest extends TestCase
         "username" => "john_doe2",
         "email" => "johndoe2@fichespedagogiques.com",
         "password" => "@User123",
-        "address_id" => 9,
       ],
     ];
 

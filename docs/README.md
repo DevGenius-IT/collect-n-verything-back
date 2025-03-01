@@ -11,7 +11,6 @@
     - [Admin](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#admin-) 🛡️
       - [Users](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#users-) 👤
       - [Roles](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#roles-) 🎭
-      - [Addresses](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#addresses-) 🏠
   - [Postman](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/USAGE.md#postman-) 📬
 - [Tests](https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/TESTS.md) 🧪
 

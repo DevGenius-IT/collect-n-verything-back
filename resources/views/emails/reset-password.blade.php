@@ -12,7 +12,7 @@
   <meta content="target-densitydpi=device-dpi" name="viewport" />
   <meta content="true" name="HandheldFriendly" />
   <meta content="width=device-width" name="viewport" />
-  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no" />
+  <meta name="format-detection" content="telephone=no, date=no, email=no, url=no" />
   <style type="text/css">
     table {
       border-collapse: separate;

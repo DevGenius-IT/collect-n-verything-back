@@ -2,9 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Address;
-use App\Models\School;
-use App\Models\Workplace;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 
@@ -34,8 +31,7 @@ class UserFactory extends Factory
       "password" => (static::$password ??= Hash::make("password")),
       "password_requested_at" => null,
       "phone_number" => fake()->optional()->phoneNumber(),
-      "has_newsletter" => fake()->boolean(),
-      "address_id" => fake()->optional()->numberBetween(1, Address::count()),
+      "has_newsletter" => fake()->boolean()
     ];
   }
 }

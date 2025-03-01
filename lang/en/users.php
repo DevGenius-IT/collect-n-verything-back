@@ -23,9 +23,8 @@ return [
       "The phone_number must be a string and start with an optional \"+\" followed by 1 to 15 digits.",
     "enabled" => "The enabled must be a boolean.",
     "has_newsletter" => "The has_newsletter must be a boolean.",
-    "address_id" => "The address_id must be an integer and exist in the addresses table.",
     "roles" => "The roles must be an array with at least one item.",
     "orderBy" =>
-      "The orderBy must be one of the following: lastname, firstname, username, email, phone_number, has_newsletter, address_id.",
+      "The orderBy must be one of the following: lastname, firstname, username, email, phone_number, has_newsletter",
   ],
 ];

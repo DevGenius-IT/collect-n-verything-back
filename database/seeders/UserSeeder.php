@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
    *
    * @var int
    */
-  private int $viewerCount = 50;
+  private int $userCount = 50;
 
   /**
    * Seed the application's database.
@@ -58,11 +58,10 @@ class UserSeeder extends Seeder
         "firstname" => $adminFirstname,
         "username" => $adminUsername,
         "email" => $adminEmail,
-        "enabled" => true,
         "password" => Hash::make($adminPassword),
-        "password_requested_at" => null,
         "phone_number" => null,
-        "has_newsletter" => false,
+        "type" => "USER",
+        "stripe_id" => null,        
         "updated_at" => now(),
         "created_at" => now(),
       ];
@@ -86,13 +85,13 @@ class UserSeeder extends Seeder
         "email" => "user@collect-verything.com",
         "password" => Hash::make("@User123"),
       ],
-      RolesEnum::VIEWER->value
+      RolesEnum::USER->value
     );
 
     // Create the users
     $this->createSuperAdmins();
     $this->createAdmins();
-    $this->createViewers();
+    $this->createUsers();
   }
 
   /**
@@ -131,9 +130,9 @@ class UserSeeder extends Seeder
 
     $user = User::factory()
       ->create($data ?? [])
-      ->assignRole(RolesEnum::VIEWER->value);
+      ->assignRole(RolesEnum::USER->value);
 
-    if ($role && $role !== RolesEnum::VIEWER) {
+    if ($role && $role !== RolesEnum::USER) {
       $user->assignRole($role->value);
     }
 
@@ -169,10 +168,10 @@ class UserSeeder extends Seeder
    *
    * @return void
    */
-  private function createViewers(): void
+  private function createUsers(): void
   {
-    for ($i = 0; $i < $this->viewerCount; $i++) {
-      $this->createUser(null, RolesEnum::VIEWER);
+    for ($i = 0; $i < $this->userCount; $i++) {
+      $this->createUser(null, RolesEnum::USER);
     }
   }
 }

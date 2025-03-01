@@ -2,7 +2,7 @@
 
 namespace App\Components;
 
-use App\Services\PaginationService;
+// use App\Services\PaginationService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -36,7 +36,7 @@ class Controller extends BaseController
    *
    * @var PaginationService
    */
-  protected PaginationService $pagination;
+  // protected PaginationService $pagination;
 
   /**
    * The service instance.
@@ -61,7 +61,7 @@ class Controller extends BaseController
    */
   public function __construct(Repository $repository, Ressource $ressource)
   {
-    $this->pagination = new PaginationService($ressource);
+    // $this->pagination = new PaginationService($ressource);
     $this->repository = $repository;
     $this->ressource = $ressource;
   }

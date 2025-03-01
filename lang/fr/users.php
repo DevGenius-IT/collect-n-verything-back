@@ -23,10 +23,8 @@ return [
       "Le numéro de téléphone doit être une chaîne de caractères et commencer par un signe \"+\" optionnel suivi de 1 à 15 chiffres.",
     "enabled" => "Le champ activé doit être un booléen.",
     "has_newsletter" => "Le champ newsletter doit être un booléen.",
-    "address_id" =>
-      "L'identifiant de l'adresse doit être un entier et exister dans la table des adresses.",
     "roles" => "Le champ roles doit être un tableau avec au moins un élément.",
     "orderBy" =>
-      "Le tri doit être l'une des suivants : lastname, firstname, username, email, phone_number, has_newsletter, address_id.",
+      "Le tri doit être l'une des suivants : lastname, firstname, username, email, phone_number, has_newsletter.",
   ],
 ];

@@ -185,7 +185,7 @@ return [
   ],
 
   "roles" => [
-    "base" => ["super-admin", "admin", "viewer"],
+    "base" => ["super-admin", "admin", "user"],
   ],
 
   "permissions" => [

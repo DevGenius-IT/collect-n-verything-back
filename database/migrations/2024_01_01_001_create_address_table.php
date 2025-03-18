@@ -10,15 +10,13 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create("addresses", function (Blueprint $table) {
+    Schema::create("address_ad", function (Blueprint $table) {
       $table->id();
-      $table->string('street');
-      $table->string('additional')->nullable();
-      $table->string('locality')->nullable();
-      $table->string('zip_code');
-      $table->string('city');
-      $table->string('department');
-      $table->string('country');
+      $table->string('ad_country');
+      $table->string('ad_city');
+      $table->string('ad_postal_code');
+      $table->string('ad_streetname');
+      $table->string('ad_number');
       $table->timestamps();
       $table->softDeletes();
     });

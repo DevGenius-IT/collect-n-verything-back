@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Address extends Model
+class Answer extends Model
 {
   use HasFactory, SoftDeletes;
 
@@ -19,11 +21,11 @@ class Address extends Model
    * @var array
    */
   protected $fillable = [
-    "country",
-    "city",
-    "postal_code",
-    "streetname",
-    "number",
+    "title",
+    "body",
+    'manyResponses',
+    "created_at",
+    "deleted_at",
   ];
 
   /**
@@ -33,14 +35,13 @@ class Address extends Model
    */
   protected $casts = [
     "created_at" => "datetime",
-    "updated_at" => "datetime",
     "deleted_at" => "datetime",
   ];
 
   // Relationships  =====================================
 
-  public function users()
-    {
-        return $this->hasMany(User::class);
-    }
+  public function question()
+  {
+    return $this->belongsTo(Question::class);
+  }
 }

@@ -11,22 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user_us', function (Blueprint $table) {
             $table->id();
-            $table->string('lastname')->nullable();
-            $table->string('firstname')->nullable();
-            $table->string('username')->unique();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('reset_password_token')->nullable();
-            $table->dateTime('password_requested_at')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->boolean('enabled')->default(true);
-            $table->boolean('has_newsletter')->default(false);
-            $table->string('google_id')->nullable();
-            $table->foreignId("address_id")->nullable()->constrained()->cascadeOnDelete();
-            $table->timestamps();
-            $table->softDeletes();
+            $table->string('us_username')->unique();
+            $table->string('us_lastname');
+            $table->string('us_firstname');
+            $table->string('us_email')->unique();
+            $table->string('us_password');
+            $table->string('us_phone_number')->nullable();
+            $table->string('us_type')->default("USER");
+            $table->string('us_stripe_id')->nullable();
+            $table->timestamps(); //created_at, updated_at
+            $table->softDeletes(); //deleted_at
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -50,7 +46,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_us');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
     }

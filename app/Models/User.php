@@ -13,40 +13,10 @@ use App\Models\Role;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Permission\Traits\HasRoles;
 
-/**
- * App\Models\User
- *
- ******Fields*******
- * @property int $id
- * @property string $lastname
- * @property string $firstname
- * @property string $username
- * @property string $email
- * @property bool $enabled
- * @property string $password
- * @property \Carbon\Carbon $password_requested_at
- * @property string $phone_number
- * @property bool $has_newsletter
- * @property int $address_id
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- *
- ******Relationships*******
- * @property-read Role $roles
- * @property-read Address $address
- *
- ******Methods*******
- * @method public string fullName()
- * @method public int getTotalExpenses()
- * @method public int getExpensesCount()
- * @method public int getDownloadsCount()
- * @method public int getViewsCount()
- *
- * @mixin \Eloquent
- */
+
 class User extends Authenticatable
 {
   use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CanResetPassword, HasRoles, UsersHelper;
@@ -117,13 +87,13 @@ class User extends Authenticatable
 
   // Relationships  =====================================
 
-  /**
-   * Get the address for the user.
-   *
-   * @return BelongsTo
-   */
-  public function address(): BelongsTo
+  public function address()
   {
-    return $this->belongsTo(Address::class)->withTrashed();
+    return $this->belongsTo(Address::class);
+  }
+
+  public function pack()
+  {
+    return $this->belongsTo(Pack::class);
   }
 }

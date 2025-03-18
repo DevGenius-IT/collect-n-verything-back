@@ -7,8 +7,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as TestingTestCase;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
-class AuthControllerTest extends TestingTestCase
+class AuthControllerTest extends TestCase
 {
     use RefreshDatabase;
 

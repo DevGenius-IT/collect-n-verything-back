@@ -23,7 +23,6 @@ class Question extends Model
     protected $fillable = [
         "title",
         "body",
-        'manyResponses',
         "created_at",
         "deleted_at",
     ];

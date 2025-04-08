@@ -21,9 +21,7 @@ class Answer extends Model
    * @var array
    */
   protected $fillable = [
-    "title",
     "body",
-    'manyResponses',
     "created_at",
     "deleted_at",
   ];

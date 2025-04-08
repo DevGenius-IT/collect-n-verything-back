@@ -96,4 +96,9 @@ class User extends Authenticatable
   {
     return $this->belongsTo(Pack::class);
   }
+
+  public function websites()
+  {
+    return $this->hasMany(Website::class);
+  }
 }

@@ -11,12 +11,13 @@ return new class extends Migration {
   public function up(): void
   {
     Schema::create("pack_pa", function (Blueprint $table) {
-      $table->id();
+      $table->id("pa_id");
       $table->string('pa_name');
       $table->string('pa_price');
       $table->string('pa_features');
-      $table->timestamps();
-      $table->softDeletes();
+      $table->timestamp('pa_created_at');
+      $table->timestamp('pa_updated_at')->nullable();
+      $table->softDeletes($column="pa_deleted_at");
     });
   }
 

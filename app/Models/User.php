@@ -2,33 +2,21 @@
 
 namespace App\Models;
 
-use App\Helpers\UsersHelper;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Role;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
 
 
-class User extends Authenticatable
-{
-  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CanResetPassword, HasRoles, UsersHelper;
+class User extends Model{
 
   // Properties =====================================
+
+  protected $table = 'user_us';
 
   /**
    * The guard name of the model.
    *
    * @var array<string>
    */
-  protected $guard_name = ["web", "admin"];
+  protected $guard_name = ["api","web", "admin"];
 
   /**
    * The attributes that are mass assignable.
@@ -41,10 +29,8 @@ class User extends Authenticatable
     "username",
     "email",
     "password",
-    "password_requested_at",
     "phone_number",
-    "has_newsletter",
-    "address_id",
+    "type",
     "created_at",
     "updated_at",
     "deleted_at",
@@ -55,7 +41,7 @@ class User extends Authenticatable
    *
    * @var array<string>
    */
-  protected $hidden = ["password", "reset_password_token"];
+  protected $hidden = ["password"];
 
   /**
    * The attributes that should be cast.
@@ -63,9 +49,6 @@ class User extends Authenticatable
    * @var array<string, string>
    */
   protected $casts = [
-    "enabled" => "boolean",
-    "password_requested_at" => "datetime",
-    "has_newsletter" => "boolean",
     "created_at" => "datetime",
     "updated_at" => "datetime",
     "deleted_at" => "datetime",

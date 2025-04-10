@@ -25,9 +25,7 @@ return new class extends Migration
             $table->timestamp('us_updated_at')->nullable();
             $table->softDeletes($column="us_deleted_at"); //deleted_at
             $table->unsignedBigInteger('ad_id')->nullable();
-            $table->foreign('ad_id')->references('ad_id')->on('address_ad')->onDelete('set null');
-            
-            
+            $table->foreign('ad_id')->references('ad_id')->on('address_ad')->onDelete('set null');            
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

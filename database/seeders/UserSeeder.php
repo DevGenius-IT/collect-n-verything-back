@@ -2,177 +2,30 @@
 
 namespace Database\Seeders;
 
-use App\Enums\RolesEnum;
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class UserSeeder extends Seeder
 {
-  /**
-   * The number of super admins to create.
-   *
-   * @var int
-   */
-  private int $superAdminCount = 2;
+    public function run()
+    {
+        // Insérer des données dans la table `user_us`
+        $faker = Faker::create();
 
-  /**
-   * The number of admins to create.
-   *
-   * @var int
-   */
-  private int $adminCount = 10;
-
-  /**
-   * The number of viewers to create.
-   *
-   * @var int
-   */
-  private int $viewerCount = 50;
-
-  /**
-   * Seed the application's database.
-   */
-  public function run(): void
-  {
-    $adminLastname = Env("ADMIN_LASTNAME");
-    $adminFirstname = Env("ADMIN_FIRSTNAME");
-    $adminUsername = Env("ADMIN_USERNAME");
-    $adminEmail = Env("ADMIN_EMAIL");
-    $adminPassword = Env("ADMIN_PASSWORD");
-
-    if ($adminLastname && $adminFirstname && $adminUsername && $adminEmail && $adminPassword) {
-      // Debugging output
-      $adminDetails = [
-        "Lastname" => $adminLastname,
-        "Firstname" => $adminFirstname,
-        "Username" => $adminUsername,
-        "Email" => $adminEmail,
-        "Password" => $adminPassword,
-      ];
-
-      $this->dumpSuperAdminFromConfig();
-
-      $data = [
-        "lastname" => $adminLastname,
-        "firstname" => $adminFirstname,
-        "username" => $adminUsername,
-        "email" => $adminEmail,
-        "enabled" => true,
-        "password" => Hash::make($adminPassword),
-        "password_requested_at" => null,
-        "phone_number" => null,
-        "has_newsletter" => false,
-        "updated_at" => now(),
-        "created_at" => now(),
-      ];
-
-      $this->createUser($data, RolesEnum::SUPER_ADMIN->value);
-    } else {
-      echo "Admin user not created. Please ensure all required environment variables are set.\n";
-      echo "Run `php artisan config:clear` to refresh the configuration cache and try again.\n";
+        DB::table('user_us')->insert([
+            'us_username' => $faker->userName,
+            'us_lastname' => $faker->lastName,
+            'us_firstname' => $faker->firstName,
+            'us_email' => $faker->unique()->safeEmail,
+            'us_password' => bcrypt('password123'), // Mot de passe crypté
+            'us_phone_number' => $faker->phoneNumber,
+            'us_type' => 'USER', // Valeur par défaut
+            'us_stripe_id' => $faker->optional()->uuid, // Stripe ID optionnel
+            'us_created_at' => now(),
+            'us_updated_at' => now(),
+            'us_deleted_at' => null,
+            'ad_id' => null,
+        ]);
     }
-
-    $this->createUser(
-      [
-        "email" => "admin@collect-verything.com",
-        "password" => Hash::make("@Admin123"),
-      ],
-      RolesEnum::ADMIN->value
-    );
-
-    $this->createUser(
-      [
-        "email" => "user@collect-verything.com",
-        "password" => Hash::make("@User123"),
-      ],
-      RolesEnum::VIEWER->value
-    );
-
-    // Create the users
-    $this->createSuperAdmins();
-    $this->createAdmins();
-    $this->createViewers();
-  }
-
-  /**
-   * Dump the super admin details from the configuration.
-   *
-   * @return void
-   */
-  private function dumpSuperAdminFromConfig(): void
-  {
-    $adminDetails = [
-      "Lastname" => Env("ADMIN_LASTNAME"),
-      "Firstname" => Env("ADMIN_FIRSTNAME"),
-      "Username" => Env("ADMIN_USERNAME"),
-      "Email" => Env("ADMIN_EMAIL"),
-      "Password" => Env("ADMIN_PASSWORD"),
-    ];
-
-    echo "\nAdmin user created with the following details:\n\n";
-    foreach ($adminDetails as $key => $value) {
-      echo "  - $key: $value\n";
-    }
-  }
-
-  /**
-   * Create a user.
-   *
-   * @param array|null $data
-   * @param null|RolesEnum|string $role
-   * @return User
-   */
-  private function createUser(?array $data, null|RolesEnum|string $role): User
-  {
-    if (is_string($role)) {
-      $role = RolesEnum::from($role);
-    }
-
-    $user = User::factory()
-      ->create($data ?? [])
-      ->assignRole(RolesEnum::VIEWER->value);
-
-    if ($role && $role !== RolesEnum::VIEWER) {
-      $user->assignRole($role->value);
-    }
-
-    return $user;
-  }
-
-  /**
-   * Create a super admin users.
-   *
-   * @return void
-   */
-  private function createSuperAdmins(): void
-  {
-    for ($i = 0; $i < $this->superAdminCount; $i++) {
-      $this->createUser(null, RolesEnum::SUPER_ADMIN);
-    }
-  }
-
-  /**
-   * Create an admin users.
-   *
-   * @return void
-   */
-  private function createAdmins(): void
-  {
-    for ($i = 0; $i < $this->adminCount; $i++) {
-      $this->createUser(null, RolesEnum::ADMIN);
-    }
-  }
-
-  /**
-   * Create a viewer users.
-   *
-   * @return void
-   */
-  private function createViewers(): void
-  {
-    for ($i = 0; $i < $this->viewerCount; $i++) {
-      $this->createUser(null, RolesEnum::VIEWER);
-    }
-  }
 }

@@ -68,9 +68,9 @@ class User extends Model
     return $this->belongsTo(Address::class);
   }
 
-  public function pack()
+  public function subscription()
   {
-    return $this->belongsTo(Pack::class);
+    return $this->belongsTo(Subscription::class);
   }
 
   public function websites()

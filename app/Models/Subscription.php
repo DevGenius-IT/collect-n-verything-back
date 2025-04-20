@@ -6,43 +6,37 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Pack extends Model
+class Subscription extends Model
 {
 
   use SoftDeletes;
 
   // Properties =====================================
-  protected $table = 'pack';
+
+  protected $table = 'subscription';
 
   /**
    * The attributes that are mass assignable.
    *
-   * @var array
+   * @var array<string>
    */
   protected $fillable = [
-    "name",
-    "price",
-    "features",
-    "created_at",
-    "updated_at",
-    "deleted_at",
+    "start_date",
+    "free_trial_end_date",
   ];
+
 
   /**
    * The attributes that should be cast.
    *
-   * @var array
+   * @var array<string, string>
    */
-  protected $casts = [
+  protected $dates = [
     "created_at" => "datetime",
     "updated_at" => "datetime",
     "deleted_at" => "datetime",
   ];
 
-  // Relationships  =====================================
 
-  public function subcriptions()
-  {
-    return $this->hasMany(Subscription::class);
-  }
+  // Methods =====================================
 }

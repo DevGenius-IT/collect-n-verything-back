@@ -10,13 +10,13 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create("answer_an", function (Blueprint $table) {
-      $table->id("an_id");
-      $table->string('an_body');
-      $table->unsignedBigInteger('qu_id')->nullable();
-      $table->foreign('qu_id')->references('qu_id')->on('question_qu')->onDelete('cascade');
-      $table->softDeletes('an_deleted_at')->nullable();
-      $table->timestamp('an_created_at');
+    Schema::create("answer", function (Blueprint $table) {
+      $table->id();
+      $table->string('body');
+      $table->unsignedBigInteger('question_id')->nullable();
+      $table->foreign('question_id')->references('id')->on('question')->onDelete('cascade');
+      $table->softDeletes();
+      $table->timestamps();
     });
   }
 
@@ -25,6 +25,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists("answer_an");
+    Schema::dropIfExists("answer");
   }
 };

@@ -10,15 +10,14 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create("website_we", function (Blueprint $table) {
-      $table->id("we_id");
-      $table->string('we_name');
-      $table->string('we_domain');
-      $table->unsignedBigInteger('us_id')->nullable();
-      $table->foreign('us_id')->references('us_id')->on('user_us')->onDelete('cascade');
-      $table->softDeletes('we_deleted_at')->nullable();
-      $table->timestamp('we_created_at');
-      $table->timestamp('we_updated_at')->nullable();
+    Schema::create("website", function (Blueprint $table) {
+      $table->id();
+      $table->string('name');
+      $table->string('domain');
+      $table->unsignedBigInteger('user_id')->nullable();
+      $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+      $table->softDeletes();
+      $table->timestamps();
     });
   }
 
@@ -27,6 +26,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists("website_we");
+    Schema::dropIfExists("website");
   }
 };

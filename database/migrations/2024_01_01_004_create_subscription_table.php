@@ -10,16 +10,16 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create("subscription_su", function (Blueprint $table) {
-      $table->id("su_id");
-      $table->unsignedBigInteger('us_id')->nullable();
-      $table->foreign('us_id')->references('us_id')->on('user_us')->onDelete('cascade');
-      $table->unsignedBigInteger('pa_id')->nullable();
-      $table->foreign('pa_id')->references('pa_id')->on('pack_pa')->onDelete('cascade');      
-      $table->dateTime('su_start_date');
-      $table->dateTime('su_free_trial_end_date')->nullable();  
-      $table->timestamp('su_updated_at')->nullable();
-      $table->softDeletes('su_cancellation_date')->nullable();
+    Schema::create("subscription", function (Blueprint $table) {
+      $table->id();
+      $table->unsignedBigInteger('user_id')->nullable();
+      $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+      $table->unsignedBigInteger('pack_id')->nullable();
+      $table->foreign('pack_id')->references('id')->on('pack')->onDelete('cascade');      
+      $table->dateTime('start_date');
+      $table->dateTime('free_trial_end_date')->nullable();  
+      $table->timestamps();
+      $table->softDeletes();
     });
   }
 
@@ -28,6 +28,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists("subscription_su");
+    Schema::dropIfExists("subscription");
   }
 };

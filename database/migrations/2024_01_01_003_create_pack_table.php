@@ -10,14 +10,13 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create("pack_pa", function (Blueprint $table) {
-      $table->id("pa_id");
-      $table->string('pa_name');
-      $table->string('pa_price');
-      $table->string('pa_features');
-      $table->timestamp('pa_created_at');
-      $table->timestamp('pa_updated_at')->nullable();
-      $table->softDeletes($column="pa_deleted_at");
+    Schema::create("pack", function (Blueprint $table) {
+      $table->id();
+      $table->string('name');
+      $table->string('price');
+      $table->string('features');
+      $table->timestamps();
+      $table->softDeletes();
     });
   }
 
@@ -26,6 +25,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists("pack_pa");
+    Schema::dropIfExists("pack");
   }
 };

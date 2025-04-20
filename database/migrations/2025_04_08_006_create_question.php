@@ -10,14 +10,14 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create("question_qu", function (Blueprint $table) {
-      $table->id("qu_id");
-      $table->string('qu_title');
-      $table->string('qu_body');
-      $table->unsignedBigInteger('us_id')->nullable();
-      $table->foreign('us_id')->references('us_id')->on('user_us')->onDelete('cascade');
-      $table->softDeletes('qu_deleted_at')->nullable();
-      $table->timestamp('qu_created_at');
+    Schema::create("question", function (Blueprint $table) {
+      $table->id();
+      $table->string('title');
+      $table->string('body');
+      $table->unsignedBigInteger('user_id')->nullable();
+      $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
+      $table->softDeletes();
+      $table->timestamps();
     });
   }
 
@@ -26,6 +26,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists("question_qu");
+    Schema::dropIfExists("question");
   }
 };

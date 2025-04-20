@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 abstract class CrudController extends Controller
 {
@@ -61,8 +63,34 @@ abstract class CrudController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate($request->all());
-        $model = $this->modelClass::create($validated);
-        return response()->json($model, 201);
+       
+    $rules = call_user_func([$this->validator, 'rules']);
+    $messages = call_user_func([$this->validator, 'messages']);
+
+    $validator = Validator::make($request->all(), $rules, $messages);
+    // dd($request->all());
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status'  => 'error',
+            'message' => 'La validation a échoué.',
+            'errors'  => $validator->errors()
+        ], 422);
+    }
+
+    $data = $validator->validated();
+
+    if (isset($data['us_password'])) {
+        $data['us_password'] = Hash::make($data['us_password']);
+    }
+
+    $model = $this->modelClass;
+    $record = $model::create($data);
+
+    return response()->json([
+        'status'  => 'success',
+        'message' => class_basename($model) . ' créé avec succès.',
+        'data'    => $record
+    ], 201);
     }
 }

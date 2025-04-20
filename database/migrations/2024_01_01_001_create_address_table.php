@@ -10,16 +10,15 @@ return new class extends Migration {
    */
   public function up(): void
   {
-    Schema::create("address_ad", function (Blueprint $table) {
-      $table->id("ad_id");
-      $table->string('ad_country');
-      $table->string('ad_city');
-      $table->string('ad_postal_code');
-      $table->string('ad_streetname');
-      $table->string('ad_number');
-      $table->timestamp('ad_created_at');
-      $table->timestamp('ad_updated_at')->nullable();
-      $table->softDeletes($column="ad_deleted_at");
+    Schema::create("address", function (Blueprint $table) {
+      $table->id();
+      $table->string('country');
+      $table->string('city');
+      $table->string('postal_code');
+      $table->string('streetname');
+      $table->string('number');
+      $table->timestamps();
+      $table->softDeletes();
     });
   }
 
@@ -28,6 +27,6 @@ return new class extends Migration {
    */
   public function down(): void
   {
-    Schema::dropIfExists("address_ad");
+    Schema::dropIfExists("address");
   }
 };

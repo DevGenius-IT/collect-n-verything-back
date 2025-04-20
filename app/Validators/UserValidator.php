@@ -2,32 +2,12 @@
 
 namespace App\Validators;
 
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 class UserValidator
 {
-    /**
-     * Valide les données d'un utilisateur.
-     *
-     * @param array $data
-     * @return array
-     * @throws ValidationException
-     */
-    public static function validate(array $data): array
-    {
-        $validator = Validator::make($data, self::rules(), self::messages());
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
-        return $validator->validated();
-    }
-
 
     /**
-     * Règles de validation.
+     * Validation rules.
      */
     public static function rules(): array
     {
@@ -47,7 +27,7 @@ class UserValidator
     }
 
     /**
-     * Messages personnalisés.
+     * Personalised messages.
      */
     public static function messages(): array
     {

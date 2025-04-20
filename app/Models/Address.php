@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Address extends Model
 {
-  use HasFactory, SoftDeletes;
 
   // Properties =====================================
 
+  protected $table = 'address';
   /**
    * The attributes that are mass assignable.
    *

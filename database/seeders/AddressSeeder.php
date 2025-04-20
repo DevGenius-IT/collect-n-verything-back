@@ -10,7 +10,6 @@ class AddressSeeder extends Seeder
 {
     public function run()
     {
-        // Insérer des données dans la table `user`
         $faker = Faker::create();
 
         DB::table('address')->insert([

@@ -12,8 +12,8 @@ class SubscriptionValidator
     public static function rules(): array
     {
         return [
-            'user_id'            => 'nullable|exists:users,id',
-            'pack_id'            => 'nullable|exists:packs,id',
+            'user_id'            => 'nullable|exists:user,id',
+            'pack_id'            => 'nullable|exists:pack,id',
             'start_date'         => 'required|date|after_or_equal:today',
             'free_trial_end_date' => 'nullable|date|after:start_date',
         ];

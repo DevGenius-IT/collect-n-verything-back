@@ -15,7 +15,7 @@ return new class extends Migration {
       $table->unsignedBigInteger('user_id')->nullable();
       $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
       $table->unsignedBigInteger('pack_id')->nullable();
-      $table->foreign('pack_id')->references('id')->on('pack')->onDelete('cascade');      
+      $table->foreign('pack_id')->references('id')->on('pack')->onDelete('cascade');   
       $table->dateTime('start_date');
       $table->dateTime('free_trial_end_date')->nullable();  
       $table->timestamps();

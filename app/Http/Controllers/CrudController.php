@@ -68,7 +68,6 @@ abstract class CrudController extends Controller
     $messages = call_user_func([$this->validator, 'messages']);
 
     $validator = Validator::make($request->all(), $rules, $messages);
-    // dd($request->all());
 
     if ($validator->fails()) {
         return response()->json([

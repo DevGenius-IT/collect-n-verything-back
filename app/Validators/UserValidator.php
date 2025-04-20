@@ -19,7 +19,7 @@ class UserValidator
             'password'     => 'required|string|min:8',
             'phone_number' => 'nullable|string|max:20',
             'type'         => 'nullable|string|in:USER,ADMIN',
-            'address_id'   => 'nullable|exists:address_ad,ad_id',
+            'address_id'   => 'nullable|exists:address,id',
             'created_at'   => 'nullable|date',
             'updated_at'   => 'nullable|date',
             'deleted_at'   => 'nullable|date',
@@ -59,7 +59,7 @@ class UserValidator
 
             'type.in'               => "Le type d'utilisateur doit être USER ou ADMIN.",
 
-            'ad_id.exists'             => "L'adresse sélectionnée n'existe pas.",
+            'address_id.exists'     => "L'adresse sélectionnée n'existe pas.",
 
             'created_at.date'       => 'La date de création doit être une date valide.',
             'updated_at.date'       => 'La date de mise à jour doit être une date valide.',

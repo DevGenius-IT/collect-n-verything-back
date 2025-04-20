@@ -20,6 +20,7 @@ return new class extends Migration {
       $table->dateTime('free_trial_end_date')->nullable();  
       $table->timestamps();
       $table->softDeletes();
+      $table->unique(['user_id', 'pack_id']);
     });
   }
 

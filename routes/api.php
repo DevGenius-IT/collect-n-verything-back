@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\PackController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix("api")->group(function () {
@@ -11,5 +12,6 @@ Route::prefix("api")->group(function () {
     Route::apiResource('addresses', AddressController::class);
     Route::apiResource('packs', PackController::class);
     Route::apiResource('subscriptions', SubscriptionController::class);
+    Route::apiResource('websites', WebsiteController::class);
 });
 

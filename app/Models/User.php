@@ -27,7 +27,8 @@ class User extends Model
     "email",
     "password",
     "phone_number",
-    "type"
+    "type",
+    "address_id"
   ];
 
   /**

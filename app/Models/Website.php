@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
 class Website extends Model
 {
-  use HasFactory, SoftDeletes;
+  use SoftDeletes;
 
   // Properties =====================================
+
+  protected $table = 'website';
 
   /**
    * The attributes that are mass assignable.
@@ -21,6 +22,7 @@ class Website extends Model
   protected $fillable = [
     "domain",
     "name",
+    'user_id'
   ];
 
   /**
@@ -38,6 +40,6 @@ class Website extends Model
 
   public function user()
   {
-    return $this->belongsTo(User::class);
+    return $this->belongsTo(User::class, 'user_id');
   }
 }

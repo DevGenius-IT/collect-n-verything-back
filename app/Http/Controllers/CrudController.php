@@ -51,9 +51,33 @@ abstract class CrudController extends Controller
     public function update(Request $request, $id)
     {
         $model = $this->findOrJson404($id);
-        $model->update($request->all());
 
-        return response()->json($model);
+        $rules = call_user_func([$this->validator, 'rules']);
+        $messages = call_user_func([$this->validator, 'messages']);
+    
+        $validator = Validator::make($request->all(), $rules, $messages);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'La validation a échoué.',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+    
+        $data = $validator->validated();
+    
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+    
+        $model->update($data);
+    
+        return response()->json([
+            'status'  => 'success',
+            'message' => class_basename($this->modelClass) . ' mis à jour avec succès.',
+            'data'    => $model
+        ], 200);
     }
 
     public function index()
@@ -63,33 +87,32 @@ abstract class CrudController extends Controller
 
     public function store(Request $request)
     {
-       
-    $rules = call_user_func([$this->validator, 'rules']);
-    $messages = call_user_func([$this->validator, 'messages']);
+        $rules = call_user_func([$this->validator, 'rules']);
+        $messages = call_user_func([$this->validator, 'messages']);
 
-    $validator = Validator::make($request->all(), $rules, $messages);
+        $validator = Validator::make($request->all(), $rules, $messages);
 
-    if ($validator->fails()) {
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'La validation a échoué.',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        $data = $validator->validated();
+
+        if (isset($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        }
+
+        $model = $this->modelClass;
+        $record = $model::create($data);
+
         return response()->json([
-            'status'  => 'error',
-            'message' => 'La validation a échoué.',
-            'errors'  => $validator->errors()
-        ], 422);
-    }
-
-    $data = $validator->validated();
-
-    if (isset($data['us_password'])) {
-        $data['us_password'] = Hash::make($data['us_password']);
-    }
-
-    $model = $this->modelClass;
-    $record = $model::create($data);
-
-    return response()->json([
-        'status'  => 'success',
-        'message' => class_basename($model) . ' créé avec succès.',
-        'data'    => $record
-    ], 201);
+            'status'  => 'success',
+            'message' => class_basename($model) . ' créé avec succès.',
+            'data'    => $record
+        ], 201);
     }
 }

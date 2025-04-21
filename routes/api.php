@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\PackController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebsiteController;
@@ -13,5 +15,6 @@ Route::prefix("api")->group(function () {
     Route::apiResource('packs', PackController::class);
     Route::apiResource('subscriptions', SubscriptionController::class);
     Route::apiResource('websites', WebsiteController::class);
+    Route::apiResource('questions', QuestionController::class);
+    Route::apiResource('answers', AnswerController::class);
 });
-

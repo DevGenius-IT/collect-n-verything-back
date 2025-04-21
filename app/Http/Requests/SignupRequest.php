@@ -3,29 +3,30 @@
 namespace App\Http\Requests;
 
 use App\Enums\RolesEnum;
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class SignupRequest extends FormRequest
 {
     /**
-     * Détermine si l'utilisateur est autorisé à faire cette requête.
+     * Authorize the request
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return true; // Change à false si tu veux restreindre l'accès.
+        return true;
     }
 
     /**
-     * Règles de validation de la requête.
+     * Validation rules.
      */
     public function rules()
     {
         return [
             "lastname" => "required|string",
             "firstname" => "required|string",
-            "username" => "required|string|unique:users,username",
-            "email" => "required|email|unique:users,email",
+            "username" => "required|string|unique:user,username",
+            "email" => "required|email|unique:user,email",
             "password" => [
                 "required",
                 "string",
@@ -35,12 +36,12 @@ class SignupRequest extends FormRequest
             ],
             "password_confirmation" => ['required', 'same:password'],
             "phone_number" => ["nullable", "string", "regex:/^\+?[1-9]\d{1,14}$/"],
-            "type" => ['required', 'string', Rule::in(RolesEnum::getValues())]
+            'type'         => 'required|in:' . implode(',', User::getTypes()),
         ];
     }
 
     /**
-     * Messages d'erreur personnalisés (optionnel).
+     * Personalised messages.
      */
     public function messages()
     {

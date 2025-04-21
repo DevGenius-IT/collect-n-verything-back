@@ -7,15 +7,15 @@ use Illuminate\Foundation\Http\FormRequest;
 class SigninRequest extends FormRequest
 {
     /**
-     * Détermine si l'utilisateur est autorisé à faire cette requête.
+     * Authorize the request
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return true; // Change à false si tu veux restreindre l'accès.
+        return true;
     }
 
     /**
-     * Règles de validation de la requête.
+     * Validation rules.
      */
     public function rules()
     {
@@ -23,14 +23,15 @@ class SigninRequest extends FormRequest
             "username" => "string|required_without:email",
             "email" => "email|required_without:username",
             "password" => [
-                "required", "string"
+                "required",
+                "string"
             ],
 
         ];
     }
 
     /**
-     * Messages d'erreur personnalisés (optionnel).
+     * Personalised messages.
      */
     public function messages()
     {

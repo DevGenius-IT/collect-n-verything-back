@@ -7,17 +7,17 @@ use Illuminate\Foundation\Http\FormRequest;
 class ResetPasswordRequest extends FormRequest
 {
     /**
-     * Détermine si l'utilisateur est autorisé à faire cette requête.
+     * Authorize the request
      */
-    public function authorize()
+    public function authorize(): bool
     {
-        return true; // Change à false si tu veux restreindre l'accès.
+        return true;
     }
 
     /**
-     * Règles de validation de la requête.
+     * Validation rules.
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             "username" => "string|required_without:email",
@@ -38,9 +38,9 @@ class ResetPasswordRequest extends FormRequest
     }
 
     /**
-     * Messages d'erreur personnalisés (optionnel).
+     * Personalised messages.
      */
-    public function messages()
+    public function messages(): array
     {
         return [
             'username.max' => 'Le nom d\'utilisateur ne peut pas dépasser 255 caractères.',

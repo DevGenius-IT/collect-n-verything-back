@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('phone_number')->nullable();
-            $table->string('type')->default("USER");
+            $table->enum('type', ['admin', 'superadmin', 'client'])->default('client');
             $table->string('stripe_id')->nullable();
             $table->timestamps();
             $table->softDeletes();

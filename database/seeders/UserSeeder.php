@@ -11,6 +11,7 @@ class UserSeeder extends Seeder
     public function run()
     {
         $faker = Faker::create();
+        $types = ['admin', 'superadmin', 'client'];
 
         foreach (range(1, 20) as $index) {
             DB::table('user')->insert([
@@ -20,7 +21,7 @@ class UserSeeder extends Seeder
                 'email' => $faker->unique()->safeEmail,
                 'password' => bcrypt('password123'),
                 'phone_number' => $faker->phoneNumber,
-                'type' => 'USER',
+                'type' => $types[array_rand($types)],
                 'stripe_id' => $faker->optional()->uuid,
                 'created_at' => now(),
                 'updated_at' => now(),

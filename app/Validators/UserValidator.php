@@ -2,6 +2,7 @@
 
 namespace App\Validators;
 
+use App\Models\User;
 
 class UserValidator
 {
@@ -18,7 +19,7 @@ class UserValidator
             'email'        => 'required|email|unique:user,email|max:255',
             'password'     => 'required|string|min:8',
             'phone_number' => 'nullable|string|max:20',
-            'type'         => 'nullable|string|in:USER,ADMIN',
+            'type'         => 'required|in:' . implode(',', User::getTypes()),
             'address_id'   => 'nullable|exists:address,id',
             'created_at'   => 'nullable|date',
             'updated_at'   => 'nullable|date',
@@ -57,7 +58,8 @@ class UserValidator
             'phone_number.string'   => 'Le numéro de téléphone doit être une chaîne.',
             'phone_number.max'      => 'Le numéro de téléphone ne peut dépasser 20 caractères.',
 
-            'type.in'               => "Le type d'utilisateur doit être USER ou ADMIN.",
+            'type.required'         => "Le type d'utilisateur est requis.",
+            'type.in'               => "Le type d'utilisateur doit être admin, superadmin ou client.",
 
             'address_id.exists'     => "L'adresse sélectionnée n'existe pas.",
 

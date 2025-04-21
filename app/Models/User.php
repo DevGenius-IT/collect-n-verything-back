@@ -49,6 +49,19 @@ class User extends Model
     "deleted_at" => "datetime",
   ];
 
+  const TYPE_ADMIN = 'admin';
+  const TYPE_SUPERADMIN = 'superadmin';
+  const TYPE_CLIENT = 'client';
+
+  public static function getTypes(): array
+  {
+    return [
+      self::TYPE_ADMIN,
+      self::TYPE_SUPERADMIN,
+      self::TYPE_CLIENT,
+    ];
+  }
+
 
   // Methods =====================================
 

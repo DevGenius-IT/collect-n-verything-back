@@ -2,61 +2,18 @@
 
 namespace App\Models;
 
-use App\Helpers\UsersHelper;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\Role;
-use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Spatie\Permission\Traits\HasRoles;
 
-/**
- * App\Models\User
- *
- ******Fields*******
- * @property int $id
- * @property string $lastname
- * @property string $firstname
- * @property string $username
- * @property string $email
- * @property bool $enabled
- * @property string $password
- * @property \Carbon\Carbon $password_requested_at
- * @property string $phone_number
- * @property bool $has_newsletter
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $deleted_at
- *
- ******Relationships*******
- * @property-read Role $roles
- *
- ******Methods*******
- * @method public string fullName()
- * @method public int getTotalExpenses()
- * @method public int getExpensesCount()
- * @method public int getDownloadsCount()
- * @method public int getViewsCount()
- *
- * @mixin \Eloquent
- */
-class User extends Authenticatable
+
+class User extends Model
 {
-  use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CanResetPassword, HasRoles;
+
+  use SoftDeletes;
 
   // Properties =====================================
 
-  /**
-   * The guard name of the model.
-   *
-   * @var array<string>
-   */
-  protected $guard_name = ["web", "admin"];
+  protected $table = 'user';
 
   /**
    * The attributes that are mass assignable.
@@ -71,10 +28,8 @@ class User extends Authenticatable
     "password",
     "phone_number",
     "type",
-    "stripe_id",
-    "created_at",
-    "updated_at",
-    "deleted_at",
+    "address_id",
+    "stripe_id"
   ];
 
   /**
@@ -82,21 +37,32 @@ class User extends Authenticatable
    *
    * @var array<string>
    */
-  protected $hidden = [
-    "password",
-    'remember_token'
-  ];
+  protected $hidden = ["password"];
 
   /**
    * The attributes that should be cast.
    *
    * @var array<string, string>
    */
-  protected $casts = [
+  protected $dates = [
     "created_at" => "datetime",
     "updated_at" => "datetime",
     "deleted_at" => "datetime",
   ];
+
+  const TYPE_ADMIN = 'admin';
+  const TYPE_SUPERADMIN = 'superadmin';
+  const TYPE_CLIENT = 'client';
+
+  public static function getTypes(): array
+  {
+    return [
+      self::TYPE_ADMIN,
+      self::TYPE_SUPERADMIN,
+      self::TYPE_CLIENT,
+    ];
+  }
+
 
   // Methods =====================================
 
@@ -112,4 +78,18 @@ class User extends Authenticatable
 
   // Relationships  =====================================
 
+  public function address()
+  {
+    return $this->belongsTo(Address::class);
+  }
+
+  public function subscription()
+  {
+    return $this->belongsTo(Subscription::class);
+  }
+
+  public function websites()
+  {
+    return $this->hasMany(Website::class);
+  }
 }

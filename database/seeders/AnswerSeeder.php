@@ -6,19 +6,16 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 
-class AddressSeeder extends Seeder
+class AnswerSeeder extends Seeder
 {
     public function run()
     {
         $faker = Faker::create();
 
         foreach (range(1, 20) as $index) {
-            DB::table('address')->insert([
-                'country'      => $faker->country(),
-                'city'         => $faker->city(),
-                'postal_code'  => $faker->postcode(),
-                'streetname'   => $faker->streetName(),
-                'number'       => $faker->buildingNumber(),
+            DB::table('answer')->insert([
+                'body' => $faker->paragraph(3),
+                'question_id' => rand(1, 5),
                 'created_at' => now(),
                 'updated_at' => now(),
                 'deleted_at' => null,

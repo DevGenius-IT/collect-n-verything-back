@@ -6,24 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class Address extends Model
+class Answer extends Model
 {
   use SoftDeletes;
 
   // Properties =====================================
 
-  protected $table = 'address';
+  protected $table = 'answer';
+
   /**
    * The attributes that are mass assignable.
    *
    * @var array
    */
   protected $fillable = [
-    "country",
-    "city",
-    "postal_code",
-    "streetname",
-    "number",
+    "body",
+    "created_at",
+    "deleted_at",
   ];
 
   /**
@@ -39,8 +38,8 @@ class Address extends Model
 
   // Relationships  =====================================
 
-  public function users()
-    {
-        return $this->hasMany(User::class);
-    }
+  public function question()
+  {
+    return $this->belongsTo(Question::class);
+  }
 }

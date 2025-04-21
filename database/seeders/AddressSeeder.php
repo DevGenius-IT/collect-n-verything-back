@@ -12,15 +12,17 @@ class AddressSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        DB::table('address')->insert([
-            'country'      => $faker->country(),
-            'city'         => $faker->city(),
-            'postal_code'  => $faker->postcode(),
-            'streetname'   => $faker->streetName(),
-            'number'       => $faker->buildingNumber(),
-            'created_at' => now(),
-            'updated_at' => now(),
-            'deleted_at' => null,
-        ]);
+        foreach (range(1, 20) as $index) {
+            DB::table('address')->insert([
+                'country'      => $faker->country(),
+                'city'         => $faker->city(),
+                'postal_code'  => $faker->postcode(),
+                'streetname'   => $faker->streetName(),
+                'number'       => $faker->buildingNumber(),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'deleted_at' => null,
+            ]);
+        }
     }
 }

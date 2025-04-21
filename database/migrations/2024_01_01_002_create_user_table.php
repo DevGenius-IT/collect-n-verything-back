@@ -27,12 +27,6 @@ return new class extends Migration
             $table->foreign('address_id')->references('id')->on('address')->onDelete('set null');            
         });
 
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
-
     }
 
     /**

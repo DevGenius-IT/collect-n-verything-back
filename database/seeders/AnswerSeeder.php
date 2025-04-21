@@ -12,12 +12,14 @@ class AnswerSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        DB::table('answer')->insert([
-            'body' => $faker->paragraph(3),
-            'question_id' => rand(1, 5),
-            'created_at' => now(),
-            'updated_at' => now(),
-            'deleted_at' => null,
-        ]);
+        foreach (range(1, 20) as $index) {
+            DB::table('answer')->insert([
+                'body' => $faker->paragraph(3),
+                'question_id' => rand(1, 5),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'deleted_at' => null,
+            ]);
+        }
     }
 }

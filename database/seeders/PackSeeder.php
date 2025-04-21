@@ -12,13 +12,15 @@ class PackSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        DB::table('pack')->insert([
-            'name' => $faker->word,
-            'price' => $faker->randomFloat(2, 5, 500),
-            'features' => implode(', ', $faker->sentences(3)),
-            'created_at' => now(),
-            'updated_at' => now(),
-            'deleted_at' => null,
-        ]);
+        foreach (range(1, 20) as $index) {
+            DB::table('pack')->insert([
+                'name' => $faker->word,
+                'price' => $faker->randomFloat(2, 5, 500),
+                'features' => implode(', ', $faker->sentences(3)),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'deleted_at' => null,
+            ]);
+        }
     }
 }

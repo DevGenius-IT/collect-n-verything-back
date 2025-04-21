@@ -12,13 +12,15 @@ class QuestionSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        DB::table('question')->insert([
-            'title' => $faker->sentence,
-            'body' => $faker->paragraph(4),
-            'user_id' => rand(1, 5),
-            'created_at' => now(),
-            'updated_at' => now(),
-            'deleted_at' => null,
-        ]);
+        foreach (range(1, 20) as $index) {
+            DB::table('question')->insert([
+                'title' => $faker->sentence,
+                'body' => $faker->paragraph(1),
+                'user_id' => rand(1, 5),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'deleted_at' => null,
+            ]);
+        }
     }
 }

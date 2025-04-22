@@ -1,0 +1,30 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Api authentification",
+        "description": "Implementation authentification api",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/auth/signup": {
+            "post": {
+                "tags": [
+                    "Authentification"
+                ],
+                "summary": "Création de compte utilisateur",
+                "operationId": "47fd319b407ed1fae5f24abf9ed83302",
+                "responses": {
+                    "200": {
+                        "description": "Succès"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentification",
+            "description": "Authentification"
+        }
+    ]
+}

@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * @OA\Info(
+     *      version="1.0.0",
+     *      title="Api authentification",
+     *      description="Implementation authentification api"
+     * )
+     *
+     */
+
 
     public function signin(SigninRequest $request)
     {
@@ -35,9 +44,34 @@ class AuthController extends Controller
             'message' => 'Connexion réussie.',
             'user' => $user,
             'token' => $token,
-        ]);
+        ], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/auth/signup",
+     *     summary="Création de compte utilisateur",
+     *     tags={"Authentification"},
+     *       @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"lastname", "firstname", "username", "email", "password", "password_confirmation", "phone_number", "type"},
+     *             @OA\Property(property="lastname", type="string"),
+     *             @OA\Property(property="firstname", type="string"),
+     *             @OA\Property(property="username", type="string"),
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password"),
+     *             @OA\Property(property="phone_number", type="string"),
+     *             @OA\Property(property="type", type="string")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Succès"
+     *     )
+     * )
+     */
     public function signup(SignupRequest $request)
     {
         $user = User::create([

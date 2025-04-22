@@ -9,6 +9,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Support\Facades\Route;
 
+include base_path("routes/auth.php");
+
 Route::prefix("api")->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('addresses', AddressController::class);

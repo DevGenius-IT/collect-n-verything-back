@@ -20,7 +20,8 @@ class SignoutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
+            "username" => "string|required_without:email",
+            "email" => "email|required_without:username",
             'password' => 'required|string|min:6',
         ];
     }

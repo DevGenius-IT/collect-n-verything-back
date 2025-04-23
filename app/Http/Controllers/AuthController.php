@@ -115,7 +115,7 @@ class AuthController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/signout",
+     *     path="/auth/signout",
      *     summary="Déconnexion sécurisée de l'utilisateur",
      *     tags={"Authentification"},
      *     @OA\RequestBody(

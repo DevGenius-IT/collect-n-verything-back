@@ -7,20 +7,18 @@ use App\Http\Requests\SigninRequest;
 use App\Http\Requests\SignoutRequest;
 use App\Http\Requests\SignupRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * @OA\Info(
+ *      version="1.0.0",
+ *      title="Api authentification",
+ *      description="Implementation authentification api"
+ * )
+ */
 class AuthController extends Controller
 {
-    /**
-     * @OA\Info(
-     *      version="1.0.0",
-     *      title="Api authentification",
-     *      description="Implementation authentification api"
-     * )
-     *
-     */
 
     /**
      * @OA\Post(

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ResetPasswordRequest;
 use App\Http\Requests\SigninRequest;
+use App\Http\Requests\SignoutRequest;
 use App\Http\Requests\SignupRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,7 +22,26 @@ class AuthController extends Controller
      *
      */
 
-
+    /**
+     * @OA\Post(
+     *     path="/auth/signin",
+     *     summary="Connexion",
+     *     tags={"Authentification"},
+     *       @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "username", "password"},
+     *             @OA\Property(property="email", type="string"),
+     *             @OA\Property(property="username", type="string"),
+     *             @OA\Property(property="password", type="string")
+     *          )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Succès"
+     *     )
+     * )
+     */
     public function signin(SigninRequest $request)
     {
         $user = User::where('email', $request->email)
@@ -95,16 +115,66 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function logout(Request $request)
+    /**
+     * @OA\Post(
+     *     path="/api/signout",
+     *     summary="Déconnexion sécurisée de l'utilisateur",
+     *     tags={"Authentification"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email", "password"},
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="password", type="string", format="password")
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Déconnexion réussie"),
+     *     @OA\Response(response=401, description="Identifiants invalides")
+     * )
+     */
+
+    public function signout(SignoutRequest $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'Identifiants incorrects.',
+                'errors' => [
+                    'email' => ['L’adresse email ou le mot de passe est incorrect.']
+                ]
+            ], 401);
+        }
+
+        $user->tokens()->delete();
 
         return response()->json([
-            'status' => 'success',
             'message' => 'Déconnexion réussie.'
         ], 200);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/auth/reset-password",
+     *     summary="Changement de mot de passe",
+     *     tags={"Authentification"},
+     *       @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"username", "old_password", "password", "password_confirmation"},
+     *             @OA\Property(property="username", type="string"),
+     *             @OA\Property(property="email", type="string", format="email"),
+     *             @OA\Property(property="old_password", type="string", format="password"),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Succès"
+     *     )
+     * )
+     */
     public function resetPassword(ResetPasswordRequest $request)
     {
         $user = User::where('email', $request->email)

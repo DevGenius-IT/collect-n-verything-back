@@ -13,6 +13,25 @@ class UserSeeder extends Seeder
         $faker = Faker::create();
         $types = ['admin', 'superadmin', 'client'];
 
+        $adminEmail = Env("ADMIN_EMAIL");
+        $adminPassword = Env("ADMIN_PASSWORD");
+        $adminLastname = Env("ADMIN_LASTNAME") ?? $faker->lastName();
+        $adminFirstname = Env("ADMIN_FIRSTNAME") ?? $faker->firstName();
+        $adminUsername = Env("ADMIN_USERNAME") ?? $faker->userName;
+
+        if ($adminEmail && $adminPassword) {
+            DB::table('user')->insert([
+                'username' => $adminUsername,
+                'lastname' => $adminLastname,
+                'firstname' => $adminFirstname,
+                'email' => $adminEmail,
+                'password' => bcrypt($adminPassword),
+                'phone_number' => $faker->phoneNumber,
+                'type' => 'superadmin',
+                'stripe_id' => $faker->optional()->uuid,
+            ]);
+        }
+
         foreach (range(1, 20) as $index) {
             DB::table('user')->insert([
                 'username' => $faker->userName,

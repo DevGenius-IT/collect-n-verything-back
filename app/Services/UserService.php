@@ -5,18 +5,19 @@ namespace App\Services;
 use App\Models\User;
 use App\Repositories\UserRepository;
 
-class UserService
+class UserService extends CrudService
 {
     protected $repo;
 
-    public function __construct(UserRepository $repo)
+    public function __construct(UserRepository $repo, PaginationService $pagination)
     {
+        parent::__construct($repo, $pagination);
         $this->repo = $repo;
     }
 
     public function getAll()
     {
-        return $this->repo->all();
+        return $this->repo->query();
     }
 
     public function getById($id)
@@ -38,4 +39,5 @@ class UserService
     {
         return $this->repo->delete($user);
     }
+
 }

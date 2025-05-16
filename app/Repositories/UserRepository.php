@@ -6,9 +6,9 @@ use App\Models\User;
 
 class UserRepository
 {
-    public function all()
+    public function query()
     {
-        return User::all();
+        return User::query();
     }
 
     public function find($id)

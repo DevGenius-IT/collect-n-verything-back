@@ -21,7 +21,7 @@ abstract class CrudController extends Controller
         $this->validator = $validator;
     }
 
-    protected function findOrJson404($id): Model
+    private function findOrJson404($id): Model
     {
         $model = $this->modelClass::find($id);
 

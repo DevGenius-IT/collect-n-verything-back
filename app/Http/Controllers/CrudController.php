@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IndexRequest;
+use App\Services\CrudService;
+use App\Services\PaginationService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -14,6 +18,7 @@ abstract class CrudController extends Controller
     protected $validator;
     protected string $modelClass;
     protected string $modelName = 'Ressource';
+    protected PaginationService $pagination;
 
     public function __construct($service, $validator)
     {
@@ -54,9 +59,9 @@ abstract class CrudController extends Controller
 
         $rules = call_user_func([$this->validator, 'rules']);
         $messages = call_user_func([$this->validator, 'messages']);
-    
+
         $validator = Validator::make($request->all(), $rules, $messages);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'status'  => 'error',
@@ -64,15 +69,15 @@ abstract class CrudController extends Controller
                 'errors'  => $validator->errors()
             ], 422);
         }
-    
+
         $data = $validator->validated();
-    
+
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
-    
+
         $model->update($data);
-    
+
         return response()->json([
             'status'  => 'success',
             'message' => class_basename($this->modelClass) . ' mis à jour avec succès.',
@@ -80,9 +85,14 @@ abstract class CrudController extends Controller
         ], 200);
     }
 
-    public function index()
+    public function index(IndexRequest $request): JsonResponse
     {
-        return response()->json($this->modelClass::all());
+        $validated = $request->validated();
+        $selectedFields = $request->selectedFields();
+
+        $records = $this->service->getPaginated($validated, $request->url(), $selectedFields);
+
+        return response()->json($records);
     }
 
     public function store(Request $request)

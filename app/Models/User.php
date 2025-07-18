@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Model
 {
 
-  use SoftDeletes, HasApiTokens;
+  use SoftDeletes, HasApiTokens, Billable;
 
   // Properties =====================================
 
@@ -28,8 +29,7 @@ class User extends Model
     "password",
     "phone_number",
     "type",
-    "address_id",
-    "stripe_id"
+    "address_id"
   ];
 
   /**

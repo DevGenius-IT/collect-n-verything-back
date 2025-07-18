@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Models\Subscription;
+use App\Models\User;
 use App\Repositories\SubscriptionRepository;
+use Exception;
 
 class SubscriptionService
 {
@@ -37,5 +39,15 @@ class SubscriptionService
     public function delete(Subscription $subscription)
     {
         return $this->repo->delete($subscription);
+    }
+
+    public function subscribe(User $user, string $paymentMethod, string $priceId, string $subscriptionName = 'default')
+    {
+        try {
+            return $user->newSubscription($subscriptionName, $priceId)
+                        ->create($paymentMethod);
+        } catch (Exception $e) {
+            throw new Exception("Erreur Stripe: " . $e->getMessage(), 422);
+        }
     }
 }

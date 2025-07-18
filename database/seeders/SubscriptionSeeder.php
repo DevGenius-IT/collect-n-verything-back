@@ -20,6 +20,9 @@ class SubscriptionSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
             'deleted_at' => null,
+            'type' => "type",
+            'stripe_id' => 1,
+            'stripe_status' => "Good"
         ]);
     }
 }

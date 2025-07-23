@@ -2,70 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subscription;
-use App\Services\SubscriptionService;
-use App\Validators\SubscriptionValidator;
-use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Routing\Controller;
+use Stripe\StripeClient;
 
-class SubscriptionController extends CrudController
+class SubscriptionController extends Controller
 {
-    protected string $modelClass = Subscription::class;
-    protected string $modelName = 'Abonnement';
-
-    protected $service;
-
-    public function __construct(SubscriptionService $service, SubscriptionValidator $validator)
+    public function index(Request $request)
     {
-        parent::__construct($service, $validator);
-    }
+        $user = $request->user();
 
-
-    public function subscribe(Request $request)
-    {
-       $validator = Validator::make($request->all(), [
-            'payment_method' => 'required|string',
-            'price_id' => 'required|string',
-            'subscription_name' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => 'Validation échouée',
-                'messages' => $validator->errors(),
-            ], 422);
+        if (!$user || !$user->stripe_id) {
+            return response()->json(['error' => 'Utilisateur non lié à Stripe.'], 404);
         }
 
-        try {
-            $user = $request->user();
-            $paymentMethod = $request->payment_method;
-            $priceId = $request->price_id;
-            $subscriptionName = $request->subscription_name ?? 'default';
+        $stripe = new StripeClient(config('services.stripe.secret'));
 
-            $subscription = $this->service->subscribe(
-                $user,
-                $paymentMethod,
-                $priceId,
-                $subscriptionName
-            );
+        try {
+            $subscriptions = $stripe->subscriptions->all([
+                'customer' => $user->stripe_id,
+                'status' => 'all',
+            ]);
 
             return response()->json([
-                'message' => 'Abonnement activé avec succès',
-                'subscription' => $subscription,
+                'subscriptions' => $subscriptions->data,
+                'user_stripe_id' => $user->stripe_id
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erreur lors de la souscription',
-                'message' => $e->getMessage(),
-            ], 422);
+                'error' => 'Erreur lors de la récupération des abonnements Stripe.',
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
-    public function checkSubscription(Request $request)
+    public function cancel(Request $request)
     {
-        return response()->json([
-            'subscribed' => $request->user()->subscribed('default'),
+        $subscription = $request->user()->subscription('default');
+        if ($subscription) {
+            $subscription->cancel();
+        }
+        return response()->json(['message' => 'Abonnement annulé']);
+    }
+
+    public function changePlan(Request $request)
+    {
+        $request->validate([
+            'price_id' => 'required|string',
         ]);
+
+        $subscription = $request->user()->subscription('default');
+        if ($subscription) {
+            $subscription->swap($request->price_id);
+        }
+
+        return response()->json(['message' => 'Abonnement mis à jour']);
     }
 }

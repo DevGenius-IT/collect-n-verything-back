@@ -4,53 +4,46 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Stripe\Product;
 use Stripe\Price;
 
 class StripeController extends Controller
 {
-    // Retourne un client_secret pour Stripe.js
-    public function createSetupIntent(Request $request)
-    {
-        $intent = $request->user()->createSetupIntent();
 
-        return response()->json([
-            'client_secret' => $intent->client_secret,
-        ]);
-    }
-
-    /**
-     * List of all the existing products on stripe.
-     */
-    public function listProductsWithPrices()
+    public function products()
     {
         Stripe::setApiKey(config('services.stripe.secret'));
-
-        // Récupère les produits actifs
-        $products = Product::all(['active' => true]);
-
-        $result = [];
-
-        foreach ($products->data as $product) {
-            // Récupère les prix associés au produit
+        $products = Product::all();
+        
+        foreach ($products->data as &$product) {
             $prices = Price::all(['product' => $product->id]);
-
-            $result[] = [
-                'product_id' => $product->id,
-                'name' => $product->name,
-                'description' => $product->description,
-                'prices' => collect($prices->data)->map(function ($price) {
-                    return [
-                        'price_id' => $price->id,
-                        'unit_amount' => $price->unit_amount / 100,
-                        'currency' => $price->currency,
-                        'interval' => $price->recurring->interval ?? null,
-                    ];
-                }),
-            ];
+            $product->prices = $prices->data;
         }
+        return response()->json($products->data);
+    }
 
-        return response()->json($result);
+    public function createSession(Request $request)
+    {
+        Stripe::setApiKey(config('services.stripe.secret'));
+        $user = $request->user();
+
+        $session = Session::create([
+            'customer_email' => $user->email,
+            'payment_method_types' => ['card'],
+            'metadata' => [
+                'user_id' => $user->id,
+            ],
+            'line_items' => [[
+                'price' => $request->price_id,
+                'quantity' => 1,
+            ]],
+            'mode' => 'subscription',
+            'success_url' => env('APP_FRONTEND_URL') . '/session/success?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => env('APP_FRONTEND_URL') . '/session/cancel',
+        ]);
+
+        return response()->json(['url' => $session->url]);
     }
 }

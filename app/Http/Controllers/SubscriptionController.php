@@ -38,24 +38,52 @@ class SubscriptionController extends Controller
 
     public function cancel(Request $request)
     {
-        $subscription = $request->user()->subscription('default');
-        if ($subscription) {
-            $subscription->cancel();
+        try {
+            $stripe = new StripeClient(config('services.stripe.secret'));
+            $subscriptionId = $request->subscription_id;
+            $canceled = $stripe->subscriptions->cancel($subscriptionId, []);
+            return response()->json([
+                'message' => 'Abonnement annulé',
+                'subscription' => $canceled,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erreur lors de l\'annulation de l\'abonnement ' . $request->subscription_id,
+                'message' => $e->getMessage(),
+            ], 500);
         }
-        return response()->json(['message' => 'Abonnement annulé']);
     }
 
     public function changePlan(Request $request)
     {
         $request->validate([
-            'price_id' => 'required|string',
+            'subscription_id' => 'required|string',
+            'new_price_id' => 'required|string',
         ]);
 
-        $subscription = $request->user()->subscription('default');
-        if ($subscription) {
-            $subscription->swap($request->price_id);
-        }
+        $stripe = new StripeClient(config('services.stripe.secret'));
 
-        return response()->json(['message' => 'Abonnement mis à jour']);
+        try {
+            $subscription = $stripe->subscriptions->retrieve($request->subscription_id);
+
+            $updated = $stripe->subscriptions->update($request->subscription_id, [
+                'items' => [
+                    [
+                        'id' => $subscription->items->data[0]->id,
+                        'price' => $request->new_price_id,
+                    ],
+                ],
+                'proration_behavior' => 'create_prorations',
+            ]);
+
+            return response()->json([
+                'message' => 'Abonnement mis à jour',
+                'subscription' => $updated,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 400);
+        }
     }
 }

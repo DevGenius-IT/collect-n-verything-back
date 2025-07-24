@@ -46,8 +46,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Abonnement
         Route::get('/subscriptions', [SubscriptionController::class, 'index']);
-        Route::post('/subscriptions/cancel', [SubscriptionController::class, 'cancel']);
-        Route::post('/subscriptions/change', [SubscriptionController::class, 'changePlan']);
+        Route::get('/subscriptions/cancel', [SubscriptionController::class, 'cancel']);
+        Route::get('/subscriptions/change', [SubscriptionController::class, 'changePlan']);
 
         // Payment Methods
         Route::get('/payment-methods', [PaymentController::class, 'index']);
@@ -61,7 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/invoices/{id}/download', [InvoiceController::class, 'download']);
 
         // Stats
-        Route::get('/stripe/stats', [StatsController::class, 'index']);
+        Route::get('/statistics', [StatsController::class, 'index']);
     });
 });
 

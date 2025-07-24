@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;
 use Stripe\Product;
 use Stripe\Price;
+use Stripe\StripeClient;
 
 class StripeController extends Controller
 {
@@ -16,7 +19,7 @@ class StripeController extends Controller
     {
         Stripe::setApiKey(config('services.stripe.secret'));
         $products = Product::all();
-        
+
         foreach ($products->data as &$product) {
             $prices = Price::all(['product' => $product->id]);
             $product->prices = $prices->data;
@@ -26,11 +29,10 @@ class StripeController extends Controller
 
     public function createSession(Request $request)
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
-        $user = $request->user();
+        $stripe = new StripeClient(config('services.stripe.secret'));
+        $user = User::find($request->user_id);
 
-        $session = Session::create([
-            'customer_email' => $user->email,
+        $checkoutData = [
             'payment_method_types' => ['card'],
             'metadata' => [
                 'user_id' => $user->id,
@@ -42,7 +44,13 @@ class StripeController extends Controller
             'mode' => 'subscription',
             'success_url' => env('APP_FRONTEND_URL') . '/session/success?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => env('APP_FRONTEND_URL') . '/session/cancel',
-        ]);
+        ];
+
+        if ($user->stripe_id != null) {
+            $checkoutData['customer'] = $user->stripe_id;
+        }
+
+        $session = $stripe->checkout->sessions->create($checkoutData);
 
         return response()->json(['url' => $session->url]);
     }

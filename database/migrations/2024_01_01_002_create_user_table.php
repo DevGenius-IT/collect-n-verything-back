@@ -20,11 +20,14 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone_number')->nullable();
             $table->enum('type', ['admin', 'superadmin', 'client'])->default('client');
-            $table->string('stripe_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->unsignedBigInteger('address_id')->nullable();
-            $table->foreign('address_id')->references('id')->on('address')->onDelete('set null');            
+            $table->foreign('address_id')->references('id')->on('address')->onDelete('set null');       
+            $table->string('stripe_id')->nullable()->index();
+            $table->string('pm_type')->nullable();
+            $table->string('pm_last_four', 4)->nullable();
+            $table->timestamp('trial_ends_at')->nullable();     
         });
 
     }

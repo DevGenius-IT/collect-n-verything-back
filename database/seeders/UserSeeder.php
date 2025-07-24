@@ -28,7 +28,6 @@ class UserSeeder extends Seeder
                 'password' => bcrypt($adminPassword),
                 'phone_number' => $faker->phoneNumber,
                 'type' => 'superadmin',
-                'stripe_id' => $faker->optional()->uuid,
             ]);
         }
 
@@ -42,6 +41,9 @@ class UserSeeder extends Seeder
                 'phone_number' => $faker->phoneNumber,
                 'type' => $types[array_rand($types)],
                 'stripe_id' => $faker->optional()->uuid,
+                'pm_type' => $faker->optional()->creditCardType,
+                'pm_last_four' => $faker->optional()->randomNumber(4, true),
+                'trial_ends_at' => $faker->optional()->dateTimeBetween('now', '+30 days'),
                 'created_at' => now(),
                 'updated_at' => now(),
                 'deleted_at' => null,

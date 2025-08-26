@@ -6,9 +6,9 @@ use App\Models\Website;
 
 class WebsiteRepository
 {
-    public function all()
+    public function query()
     {
-        return Website::all();
+        return Website::query();
     }
 
     public function find($id)

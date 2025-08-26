@@ -6,9 +6,9 @@ use App\Models\Question;
 
 class QuestionRepository
 {
-    public function all()
+    public function query()
     {
-        return Question::all();
+        return Question::query();
     }
 
     public function find($id)

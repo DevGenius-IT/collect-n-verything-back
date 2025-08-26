@@ -19,25 +19,9 @@ include base_path("routes/auth.php");
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix("api")->group(function () {
         Route::apiResource('users', UserController::class);
-        Route::apiResource('addresses', AddressController::class);
-        // Route::apiResource('packs', PackController::class);
-        // Route::apiResource('subscriptions', SubscriptionController::class);
         Route::apiResource('websites', WebsiteController::class);
         Route::apiResource('questions', QuestionController::class);
         Route::apiResource('answers', AnswerController::class);
-
-        // Route::prefix("subscriptions")->group(function () {
-        //     Route::post('/checkout/session', [SubscriptionController::class, 'createCheckoutSession']);
-        //     Route::post('/checkout/success', [SubscriptionController::class, 'successSubscription']);
-        //     Route::post('/checkout/cancel', [SubscriptionController::class, 'cancelSubscription']);
-        //     Route::get('/check', [SubscriptionController::class, 'checkSubscription']);
-        // });
-
-        // Route::prefix("stripe")->group(function () {
-        //     Route::get('/setup-intent', [StripeController::class, 'setup-intent']);
-        //     Route::post('/products', [StripeController::class, 'listProductsWithPrices']);
-        //     Route::post('/webhook', [StripeWebhookController::class, 'handle']);
-        // });
 
         Route::get('/products', [StripeController::class, 'products']);
 

@@ -5,18 +5,19 @@ namespace App\Services;
 use App\Models\Answer;
 use App\Repositories\AnswerRepository;
 
-class AnswerService
+class AnswerService extends CrudService
 {
     protected $repo;
 
-    public function __construct(AnswerRepository $repo)
+    public function __construct(AnswerRepository $repo, PaginationService $pagination)
     {
+        parent::__construct($repo, $pagination);
         $this->repo = $repo;
     }
 
     public function getAll()
     {
-        return $this->repo->all();
+        return $this->repo->query();
     }
 
     public function getById($id)

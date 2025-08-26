@@ -10,21 +10,56 @@ class PaymentController extends Controller
 {
     public function index(Request $request)
     {
-        $stripe = new StripeClient(config('services.stripe.secret'));
-        try {
-            $paymentMethods = $stripe->paymentMethods->all([
-                'customer' => $request->user_stripe_id,
-                'type' => 'card',
-            ]);
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
 
-            return response()->json($paymentMethods->data);
+        try {
+            $page = max((int) $request->query('page', 1), 1); // par défaut 1
+            $perPage = min((int) $request->query('per_page', 20), 100); // Stripe max 100
+
+            $options = [
+                'customer' => $request->user_stripe_id,
+                'type'     => 'card',
+                'limit'    => $perPage,
+            ];
+
+            $paymentMethods = null;
+            $startingAfter = null;
+
+            // Stripe ne supporte pas offset -> on avance avec starting_after
+            for ($i = 1; $i <= $page; $i++) {
+                if ($startingAfter) {
+                    $options['starting_after'] = $startingAfter;
+                }
+
+                $paymentMethods = $stripe->paymentMethods->all($options);
+
+                if ($i < $page && $paymentMethods->has_more) {
+                    $lastItem = end($paymentMethods->data);
+                    $startingAfter = $lastItem ? $lastItem->id : null;
+
+                    if (!$startingAfter) {
+                        break;
+                    }
+                }
+            }
+
+            return response()->json([
+                'data'          => $paymentMethods ? $paymentMethods->data : [],
+                'current_page'  => $page,
+                'per_page'      => $perPage,
+                'has_more'      => $paymentMethods ? $paymentMethods->has_more : false,
+                'next_page_url' => $paymentMethods && $paymentMethods->has_more
+                    ? url("/api/payment-methods?page=" . ($page + 1) . "&per_page={$perPage}")
+                    : null,
+            ]);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erreur Stripe',
+                'error'   => 'Erreur Stripe',
                 'message' => $e->getMessage()
             ], 500);
         }
     }
+
 
     /**
      * Update la méthode de paiement associé à l'utilisateur.

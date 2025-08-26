@@ -5,14 +5,35 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Stripe\StripeClient;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class InvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $invoices = $request->user()->invoices();
+        $user = $request->user();
 
-        return response()->json($invoices);
+        if (!$user) {
+            return response()->json(['error' => 'Utilisateur non authentifié.'], 401);
+        }
+
+        // Récupère toutes les factures
+        $invoices = $user->invoices();
+
+        // Paramètres de pagination
+        $page = max((int) $request->query('page', 1), 1);
+        $perPage = min((int) $request->query('per_page', 20), 100);
+
+        // Transformer la collection en paginator Laravel
+        $invoicesPaginated = new LengthAwarePaginator(
+            $invoices->forPage($page, $perPage), // données de la page
+            $invoices->count(),                  // total
+            $perPage,                            // nombre par page
+            $page,                               // page actuelle
+            ['path' => $request->url(), 'query' => $request->query()] // conserver les paramètres
+        );
+
+        return response()->json($invoicesPaginated);
     }
 
     public function details(Request $request, $id)
@@ -24,7 +45,7 @@ class InvoiceController extends Controller
 
     public function download(Request $request, $id)
     {
-       $stripe = new StripeClient(config('services.stripe.secret'));
+        $stripe = new StripeClient(config('services.stripe.secret'));
 
         try {
             $invoice = $stripe->invoices->retrieve($id, []);
@@ -38,7 +59,6 @@ class InvoiceController extends Controller
             $pdfUrl = $invoice->invoice_pdf;
 
             return redirect($pdfUrl);
-
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Impossible de récupérer la facture',

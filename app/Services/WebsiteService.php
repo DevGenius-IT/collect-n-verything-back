@@ -5,18 +5,19 @@ namespace App\Services;
 use App\Models\Website;
 use App\Repositories\WebsiteRepository;
 
-class WebsiteService
+class WebsiteService extends CrudService
 {
     protected $repo;
 
-    public function __construct(WebsiteRepository $repo)
+    public function __construct(WebsiteRepository $repo, PaginationService $pagination)
     {
+        parent::__construct($repo, $pagination);
         $this->repo = $repo;
     }
 
     public function getAll()
     {
-        return $this->repo->all();
+        return $this->repo->query();
     }
 
     public function getById($id)

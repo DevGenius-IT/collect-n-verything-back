@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\PackController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\StatsController;
@@ -12,6 +10,7 @@ use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\WebsiteController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 include base_path("routes/auth.php");
@@ -22,6 +21,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('websites', WebsiteController::class);
         Route::apiResource('questions', QuestionController::class);
         Route::apiResource('answers', AnswerController::class);
+
+        Route::get('contacts', [ContactController::class, 'index']);
+        Route::get('contacts/{id}', [ContactController::class, 'show']);
+        Route::put('contacts/{id}', [ContactController::class, 'update']);
+        Route::delete('contacts/{id}', [ContactController::class, 'destroy']);
 
         Route::get('/products', [StripeController::class, 'products']);
 
@@ -49,4 +53,5 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+Route::post('/api/contacts', [ContactController::class, 'store']);
 Route::post('/api/webhook/stripe', [WebhookController::class, 'handle']);

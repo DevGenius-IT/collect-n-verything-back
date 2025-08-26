@@ -23,8 +23,6 @@ class Contact extends Model
     "subject",
     "email",
     "body",
-    "created_at",
-    "deleted_at",
   ];
 
   /**
@@ -32,7 +30,7 @@ class Contact extends Model
    *
    * @var array
    */
-  protected $casts = [
+  protected $dates = [
     "created_at" => "datetime",
     "updated_at" => "datetime",
     "deleted_at" => "datetime",

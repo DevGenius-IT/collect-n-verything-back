@@ -6,9 +6,9 @@ use App\Models\Contact;
 
 class ContactRepository
 {
-    public function all()
+    public function query()
     {
-        return Contact::all();
+        return Contact::query();
     }
 
     public function find($id)

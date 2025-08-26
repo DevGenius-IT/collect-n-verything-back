@@ -6,9 +6,9 @@ use App\Models\Answer;
 
 class AnswerRepository
 {
-    public function all()
+    public function query()
     {
-        return Answer::all();
+        return Answer::query();
     }
 
     public function find($id)

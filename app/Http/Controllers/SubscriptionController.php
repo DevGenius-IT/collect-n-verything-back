@@ -16,21 +16,51 @@ class SubscriptionController extends Controller
             return response()->json(['error' => 'Utilisateur non lié à Stripe.'], 404);
         }
 
-        $stripe = new StripeClient(config('services.stripe.secret'));
+        $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
 
         try {
-            $subscriptions = $stripe->subscriptions->all([
+            $page = max((int) $request->get('page', 1), 1); 
+            $perPage = min((int) $request->get('per_page', 20), 100); 
+
+            $options = [
                 'customer' => $user->stripe_id,
-                'status' => 'all',
-            ]);
+                'status'   => 'all',
+                'limit'    => $perPage,
+            ];
+
+            $subscriptions = null;
+            $startingAfter = null;
+
+            for ($i = 1; $i <= $page; $i++) {
+                if ($startingAfter) {
+                    $options['starting_after'] = $startingAfter;
+                }
+
+                $subscriptions = $stripe->subscriptions->all($options);
+
+                if ($i < $page && $subscriptions->has_more) {
+                    $lastItem = end($subscriptions->data);
+                    $startingAfter = $lastItem ? $lastItem->id : null;
+
+                    if (!$startingAfter) {
+                        break; // plus d’items
+                    }
+                }
+            }
 
             return response()->json([
-                'subscriptions' => $subscriptions->data,
-                'user_stripe_id' => $user->stripe_id
+                'subscriptions'   => $subscriptions ? $subscriptions->data : [],
+                'has_more'        => $subscriptions ? $subscriptions->has_more : false,
+                'user_stripe_id'  => $user->stripe_id,
+                'current_page'    => $page,
+                'per_page'        => $perPage,
+                'next_page_url'   => $subscriptions && $subscriptions->has_more
+                    ? url("/api/subscriptions?page=" . ($page + 1) . "&per_page={$perPage}")
+                    : null,
             ]);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erreur lors de la récupération des abonnements Stripe.',
+                'error'   => 'Erreur lors de la récupération des abonnements Stripe.',
                 'message' => $e->getMessage()
             ], 500);
         }

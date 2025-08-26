@@ -5,18 +5,19 @@ namespace App\Services;
 use App\Models\Question;
 use App\Repositories\QuestionRepository;
 
-class QuestionService
+class QuestionService extends CrudService
 {
     protected $repo;
 
-    public function __construct(QuestionRepository $repo)
+    public function __construct(QuestionRepository $repo, PaginationService $pagination)
     {
+        parent::__construct($repo, $pagination);
         $this->repo = $repo;
     }
 
     public function getAll()
     {
-        return $this->repo->all();
+        return $this->repo->query();
     }
 
     public function getById($id)

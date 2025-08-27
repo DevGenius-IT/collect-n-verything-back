@@ -27,8 +27,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('contacts/{id}', [ContactController::class, 'update']);
         Route::delete('contacts/{id}', [ContactController::class, 'destroy']);
 
-        Route::get('/products', [StripeController::class, 'products']);
-
         // Stripe Checkout
         Route::post('/checkout/session', [StripeController::class, 'createSession']);
 
@@ -55,3 +53,4 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('/api/contacts', [ContactController::class, 'store']);
 Route::post('/api/webhook/stripe', [WebhookController::class, 'handle']);
+Route::get('/api/products', [StripeController::class, 'products']);

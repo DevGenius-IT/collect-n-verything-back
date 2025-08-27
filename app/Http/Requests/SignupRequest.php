@@ -36,7 +36,7 @@ class SignupRequest extends FormRequest
             ],
             "password_confirmation" => ['required', 'same:password'],
             "phone_number" => ["nullable", "string", "regex:/^\+?[1-9]\d{1,14}$/"],
-            'type'         => 'required|in:' . implode(',', User::getTypes()),
+            'type'         => 'nullable|in:' . implode(',', User::getTypes()),
         ];
     }
 
@@ -68,10 +68,6 @@ class SignupRequest extends FormRequest
 
             'phone_number.nullable' => 'Le numéro de téléphone peut être vide.',
             'phone_number.regex' => 'Le numéro de téléphone n\'est pas valide.', // Si tu as une validation spécifique pour les numéros de téléphone
-
-            'type.required' => 'Le type est obligatoire.',
-            'type.string' => 'Le type doit être une chaîne de caractères.',
-            'type.in' => 'Le type doit être une valeur valide parmi les rôles autorisés.',
 
             'stripe_id.nullable' => 'Le champ stripe_id peut être vide.',
 

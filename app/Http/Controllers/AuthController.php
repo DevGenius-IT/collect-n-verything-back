@@ -51,7 +51,7 @@ class AuthController extends Controller
             'address_id'    => $request->address_id,
             'stripe_id'     => $request->stripe_id,
         ]);
-
+        
         $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([

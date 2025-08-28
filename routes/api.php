@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Abonnement
         Route::get('/subscriptions', [SubscriptionController::class, 'index']);
-        Route::get('/subscriptions/{id}', [SubscriptionController::class, 'getSubscription']);
+        Route::get('/subscriptions/get-last', [SubscriptionController::class, 'getLastSubscription']);
         Route::get('/subscriptions/cancel', [SubscriptionController::class, 'cancel']);
         Route::get('/subscriptions/change', [SubscriptionController::class, 'changePlan']);
 

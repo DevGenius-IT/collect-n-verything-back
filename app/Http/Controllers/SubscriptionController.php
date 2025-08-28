@@ -7,6 +7,9 @@ use Illuminate\Routing\Controller;
 use Stripe\StripeClient;
 use Stripe\Stripe;
 use Stripe\Subscription;
+use Stripe\Checkout\Session as CheckoutSession;
+use Illuminate\Support\Facades\Auth;
+
 
 class SubscriptionController extends Controller
 {
@@ -86,26 +89,37 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function getSubscription($id)
+    public function getLastSubscription()
     {
-       try {
+      $user = Auth::user();
+
+        if (!$user || !$user->stripe_id) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Stripe ID manquant.'
+            ], 404);
+        }
+
+        try {
             Stripe::setApiKey(env('STRIPE_SECRET'));
 
-            $subscription = Subscription::retrieve($id);
+            $subscriptions = Subscription::all([
+                'customer' => $user->stripe_id,
+                'limit' => 1, 
+            ]);
 
-            $data = [
-                'id'                => $subscription->id,
-                'customer'          => $subscription->customer,
-                'status'            => $subscription->status,
-                'current_period_start' => $subscription->current_period_start,
-                'current_period_end'   => $subscription->current_period_end,
-                'items'             => $subscription->items->data,
-                'latest_invoice'    => $subscription->latest_invoice,
-            ];
+            $lastSubscription = $subscriptions->data[0] ?? null;
+
+            if (!$lastSubscription) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Aucun abonnement trouvé pour cet utilisateur.'
+                ], 404);
+            }
 
             return response()->json([
                 'status' => 'success',
-                'data'   => $data
+                'last_subscription' => $lastSubscription
             ], 200);
 
         } catch (\Exception $e) {

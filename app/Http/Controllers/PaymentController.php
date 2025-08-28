@@ -104,7 +104,7 @@ class PaymentController extends Controller
 
     public function success(Request $request)
     {
-        $sessionId = $request->query('session_id');
+         $sessionId = $request->query('session_id');
 
         if (!$sessionId) {
             return response()->json([
@@ -123,7 +123,7 @@ class PaymentController extends Controller
                 'customer_id'      => $session->customer,
                 'subscription_id'  => $session->subscription ?? null,
                 'invoice_id'       => $session->invoice ?? null,
-                'payment_intent_id' => $session->payment_intent ?? null,
+                'payment_intent_id'=> $session->payment_intent ?? null,
                 'amount_total'     => $session->amount_total ?? null,
                 'currency'         => $session->currency ?? null,
             ];
@@ -132,6 +132,7 @@ class PaymentController extends Controller
                 'status' => 'success',
                 'data'   => $data
             ]);
+
         } catch (\Exception $e) {
             return response()->json([
                 'status'  => 'error',

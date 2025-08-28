@@ -14,7 +14,7 @@ class AnswerSeeder extends Seeder
 
         foreach (range(1, 20) as $index) {
             DB::table('answer')->insert([
-                'body' => $faker->paragraph(3),
+                'body' => $faker->paragraph(2),
                 'question_id' => rand(1, 5),
                 'created_at' => now(),
                 'updated_at' => now(),

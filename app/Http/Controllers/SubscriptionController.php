@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Stripe\StripeClient;
+use Stripe\Stripe;
+use Stripe\Subscription;
 
 class SubscriptionController extends Controller
 {
@@ -81,6 +83,36 @@ class SubscriptionController extends Controller
                 'error' => 'Erreur lors de l\'annulation de l\'abonnement ' . $request->subscription_id,
                 'message' => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    public function getSubscription($id)
+    {
+       try {
+            Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            $subscription = Subscription::retrieve($id);
+
+            $data = [
+                'id'                => $subscription->id,
+                'customer'          => $subscription->customer,
+                'status'            => $subscription->status,
+                'current_period_start' => $subscription->current_period_start,
+                'current_period_end'   => $subscription->current_period_end,
+                'items'             => $subscription->items->data,
+                'latest_invoice'    => $subscription->latest_invoice,
+            ];
+
+            return response()->json([
+                'status' => 'success',
+                'data'   => $data
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage()
+            ], 400);
         }
     }
 

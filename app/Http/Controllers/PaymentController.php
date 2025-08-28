@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Stripe\StripeClient;
+use Stripe\Stripe;
+use Stripe\Checkout\Session as CheckoutSession;
 
 class PaymentController extends Controller
 {
@@ -100,9 +102,42 @@ class PaymentController extends Controller
         }
     }
 
-    public function success()
+    public function success(Request $request)
     {
-        return response()->json(['message' => 'Paiement réussi. Le user a été associé à son abonnement.']);
+        $sessionId = $request->query('session_id');
+
+        if (!$sessionId) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'session_id manquant dans l\'URL.'
+            ], 400);
+        }
+
+        try {
+            Stripe::setApiKey(env('STRIPE_SECRET'));
+
+            $session = CheckoutSession::retrieve($sessionId);
+
+            $data = [
+                'session_id'       => $session->id,
+                'customer_id'      => $session->customer,
+                'subscription_id'  => $session->subscription ?? null,
+                'invoice_id'       => $session->invoice ?? null,
+                'payment_intent_id' => $session->payment_intent ?? null,
+                'amount_total'     => $session->amount_total ?? null,
+                'currency'         => $session->currency ?? null,
+            ];
+
+            return response()->json([
+                'status' => 'success',
+                'data'   => $data
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => $e->getMessage()
+            ], 400);
+        }
     }
 
     public function cancel()

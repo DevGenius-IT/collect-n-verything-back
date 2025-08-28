@@ -9,6 +9,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
+use Stripe\Stripe;
+use Stripe\Customer;
 
 class AuthController extends Controller
 {
@@ -51,7 +53,18 @@ class AuthController extends Controller
             'address_id'    => $request->address_id,
             'stripe_id'     => $request->stripe_id,
         ]);
-        
+
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $customer = Customer::create([
+            'email' => $user->email,
+            'name'  => $user->firstname . ' ' . $user->lastname,
+            'phone' => $user->phone_number,
+        ]);
+
+        $user->stripe_id = $customer->id;
+        $user->save();
+
         $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([

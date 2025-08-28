@@ -23,6 +23,39 @@ class UserController extends CrudController
         parent::__construct($service, $validator);
     }
 
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Utilisateur non trouvé.'
+            ], 404);
+        }
+
+        $rules = UserValidator::updateRules($id);
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'La validation a échoué.',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
+        $data = array_filter($validator->validated(), fn($v) => !is_null($v) && $v !== '');
+
+        $user->update($data);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Utilisateur mis à jour avec succès.',
+            'data'    => $user
+        ]);
+    }
+
     public function store(Request $request)
     {
         $rules = call_user_func([$this->validator, 'rules']);

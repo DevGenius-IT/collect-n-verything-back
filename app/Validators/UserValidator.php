@@ -27,6 +27,20 @@ class UserValidator
         ];
     }
 
+    public static function updateRules($userId)
+    {
+        return [
+            'lastname'     => 'sometimes|required|string|max:255',
+            'firstname'    => 'sometimes|required|string|max:255',
+            'username'     => 'sometimes|nullable|string|max:255|unique:user,username,' . $userId,
+            'email'        => 'sometimes|nullable|email|max:255|unique:user,email,' . $userId,
+            'password'     => 'sometimes|nullable|string|min:8',
+            'phone_number' => 'sometimes|nullable|string|max:20',
+            'type'         => 'sometimes|nullable|in:' . implode(',', User::getTypes()),
+            'address_id'   => 'sometimes|nullable|exists:address,id',
+        ];
+    }
+
     /**
      * Personalised messages.
      */

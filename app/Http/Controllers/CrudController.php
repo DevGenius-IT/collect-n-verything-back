@@ -45,7 +45,7 @@ abstract class CrudController extends Controller
         return response()->json($model);
     }
 
-    public function destroy($id)
+    public function destroy($id) //TODO
     {
         $model = $this->findOrJson404($id);
         $model->delete();
@@ -87,13 +87,27 @@ abstract class CrudController extends Controller
 
     public function index(IndexRequest $request): JsonResponse
     {
-        $validated = $request->validated();
-        $selectedFields = $request->selectedFields();
+        $validated = $request->validate([
+            'per_page' => 'sometimes|integer|min:1|max:100',
+            'page'     => 'sometimes|integer|min:1',
+            'orderBy'  => 'sometimes|string',
+            'order'    => 'sometimes|string|in:asc,desc',
+            'trash'    => 'sometimes|string|in:with,only',
+        ]);
 
-        $records = $this->service->getPaginated($validated, $request->url(), $selectedFields);
+        $selectedFields = $request->query('fields')
+            ? explode(',', $request->query('fields'))
+            : null;
+
+        $records = $this->service->getPaginated(
+            $validated,
+            $request->url(),
+            $selectedFields
+        );
 
         return response()->json($records);
     }
+
 
     public function store(Request $request)
     {

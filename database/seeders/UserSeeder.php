@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Faker\Factory as Faker;
 
 class UserSeeder extends Seeder
@@ -13,14 +13,14 @@ class UserSeeder extends Seeder
         $faker = Faker::create();
         $types = ['admin', 'superadmin', 'client'];
 
-        $adminEmail = Env("ADMIN_EMAIL");
-        $adminPassword = Env("ADMIN_PASSWORD");
-        $adminLastname = Env("ADMIN_LASTNAME") ?? $faker->lastName();
-        $adminFirstname = Env("ADMIN_FIRSTNAME") ?? $faker->firstName();
-        $adminUsername = Env("ADMIN_USERNAME") ?? $faker->userName;
+        $adminEmail = env("ADMIN_EMAIL");
+        $adminPassword = env("ADMIN_PASSWORD");
+        $adminLastname = env("ADMIN_LASTNAME") ?? $faker->lastName();
+        $adminFirstname = env("ADMIN_FIRSTNAME") ?? $faker->firstName();
+        $adminUsername = env("ADMIN_USERNAME") ?? $faker->userName;
 
         if ($adminEmail && $adminPassword) {
-            DB::table('user')->insert([
+            $admin = User::create([
                 'username' => $adminUsername,
                 'lastname' => $adminLastname,
                 'firstname' => $adminFirstname,
@@ -29,10 +29,12 @@ class UserSeeder extends Seeder
                 'phone_number' => $faker->phoneNumber,
                 'type' => 'superadmin',
             ]);
+
+            $admin->createAsStripeCustomer();
         }
 
         foreach (range(1, 20) as $index) {
-            DB::table('user')->insert([
+            $user = User::create([
                 'username' => $faker->userName,
                 'lastname' => $faker->lastName,
                 'firstname' => $faker->firstName,
@@ -40,15 +42,11 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('password123'),
                 'phone_number' => $faker->phoneNumber,
                 'type' => $types[array_rand($types)],
-                'stripe_id' => $faker->optional()->uuid,
-                'pm_type' => $faker->optional()->creditCardType,
-                'pm_last_four' => $faker->optional()->randomNumber(4, true),
-                'trial_ends_at' => $faker->optional()->dateTimeBetween('now', '+30 days'),
                 'created_at' => now(),
                 'updated_at' => now(),
-                'deleted_at' => null,
-                'address_id' => null,
             ]);
+
+            $user->createAsStripeCustomer();
         }
     }
 }

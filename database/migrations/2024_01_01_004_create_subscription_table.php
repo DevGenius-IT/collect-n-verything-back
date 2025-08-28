@@ -14,13 +14,11 @@ return new class extends Migration {
       $table->id();
       $table->unsignedBigInteger('user_id')->nullable();
       $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
-      $table->unsignedBigInteger('pack_id')->nullable();
-      $table->foreign('pack_id')->references('id')->on('pack')->onDelete('cascade');
       $table->dateTime('start_date');
       $table->dateTime('free_trial_end_date')->nullable();
       $table->timestamps();
       $table->softDeletes();
-      $table->unique(['user_id', 'pack_id']);
+      $table->unique(['user_id']);
       $table->string('type');
       $table->string('stripe_id')->unique();
       $table->string('stripe_status');

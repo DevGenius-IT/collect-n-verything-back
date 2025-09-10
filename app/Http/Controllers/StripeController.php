@@ -86,8 +86,8 @@ class StripeController extends Controller
                 'quantity' => 1,
             ]],
             'mode' => 'subscription',
-            'success_url' => env('APP_FRONTEND_URL') . '/api/payment-methods/success?session_id={CHECKOUT_SESSION_ID}',
-            'cancel_url' => env('APP_FRONTEND_URL') . '/api/payment-methods/cancel',
+            'success_url' => env('APP_FRONTEND_URL') . '/session/success',
+            'cancel_url' => env('APP_FRONTEND_URL') . '/session/cancel',
         ];
 
         if ($user->stripe_id != null) {

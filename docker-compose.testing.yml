@@ -41,3 +41,21 @@ services:
         - 'http://localhost:9000/minio/health/live'
       retries: 3
       timeout: 5s
+
+  app-test:
+    image: php:8.2-fpm
+    container_name: php-test-cv
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_ENV: testing
+    command: >
+      sh -c "php artisan config:clear &&
+            php artisan cache:clear &&
+            php artisan test"

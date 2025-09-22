@@ -90,9 +90,9 @@ abstract class CrudController extends Controller
         $validated = $request->validate([
             'limit' => 'sometimes|integer|min:1|max:100',
             'page'     => 'sometimes|integer|min:1',
-            'orderBy'  => 'null|sometimes|string',
-            'order'    => 'null|sometimes|string|in:asc,desc',
-            'trash'    => 'null|sometimes|string|in:with,only',
+            'orderBy'  => 'nullable|sometimes|string',
+            'order'    => 'nullable|sometimes|string|in:asc,desc',
+            'trash'    => 'nullable|sometimes|string|in:with,only',
         ]);
 
         $selectedFields = $request->query('fields')

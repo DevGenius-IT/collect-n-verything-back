@@ -10,7 +10,7 @@ class PaginationService
     {
         $query = $repository->query();
 
-        $perPage = $params['per_page'] ?? 10;
+        $perPage = $params['limit'] ?? 10;
         $page = $params['page'] ?? 1;
 
         $orderBy = $params['orderBy'] ?? 'id';

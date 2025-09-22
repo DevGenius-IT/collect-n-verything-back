@@ -21,7 +21,7 @@ class StripeController extends Controller
         try {
             // Récupération des paramètres
             $page = max((int) $request->query('page', 1), 1); // page >= 1
-            $perPage = min((int) $request->query('per_page', 20), 100); // Stripe max 100
+            $perPage = min((int) $request->query('limit', 20), 100); // Stripe max 100
 
             $options = [
                 'limit' => $perPage,
@@ -57,10 +57,10 @@ class StripeController extends Controller
             return response()->json([
                 'data'          => $products ? $products->data : [],
                 'current_page'  => $page,
-                'per_page'      => $perPage,
+                'limit'      => $perPage,
                 'has_more'      => $products ? $products->has_more : false,
                 'next_page_url' => $products && $products->has_more
-                    ? url("/api/products?page=" . ($page + 1) . "&per_page={$perPage}")
+                    ? url("/api/products?page=" . ($page + 1) . "&limit={$perPage}")
                     : null,
             ]);
         } catch (\Exception $e) {

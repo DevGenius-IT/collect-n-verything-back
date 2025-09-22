@@ -16,7 +16,7 @@ class PaymentController extends Controller
 
         try {
             $page = max((int) $request->query('page', 1), 1); // par défaut 1
-            $perPage = min((int) $request->query('per_page', 20), 100); // Stripe max 100
+            $perPage = min((int) $request->query('limit', 20), 100); // Stripe max 100
 
             $options = [
                 'customer' => $request->user_stripe_id,
@@ -48,10 +48,10 @@ class PaymentController extends Controller
             return response()->json([
                 'data'          => $paymentMethods ? $paymentMethods->data : [],
                 'current_page'  => $page,
-                'per_page'      => $perPage,
+                'limit'      => $perPage,
                 'has_more'      => $paymentMethods ? $paymentMethods->has_more : false,
                 'next_page_url' => $paymentMethods && $paymentMethods->has_more
-                    ? url("/api/payment-methods?page=" . ($page + 1) . "&per_page={$perPage}")
+                    ? url("/api/payment-methods?page=" . ($page + 1) . "&limit={$perPage}")
                     : null,
             ]);
         } catch (\Exception $e) {

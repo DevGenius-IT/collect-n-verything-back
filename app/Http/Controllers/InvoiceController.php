@@ -22,7 +22,7 @@ class InvoiceController extends Controller
 
         // Paramètres de pagination
         $page = max((int) $request->query('page', 1), 1);
-        $perPage = min((int) $request->query('per_page', 20), 100);
+        $perPage = min((int) $request->query('limit', 20), 100);
 
         // Transformer la collection en paginator Laravel
         $invoicesPaginated = new LengthAwarePaginator(

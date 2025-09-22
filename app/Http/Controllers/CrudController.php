@@ -88,11 +88,11 @@ abstract class CrudController extends Controller
     public function index(IndexRequest $request): JsonResponse
     {
         $validated = $request->validate([
-            'per_page' => 'sometimes|integer|min:1|max:100',
+            'limit' => 'sometimes|integer|min:1|max:100',
             'page'     => 'sometimes|integer|min:1',
-            'orderBy'  => 'sometimes|string',
-            'order'    => 'sometimes|string|in:asc,desc',
-            'trash'    => 'sometimes|string|in:with,only',
+            'orderBy'  => 'null|sometimes|string',
+            'order'    => 'null|sometimes|string|in:asc,desc',
+            'trash'    => 'null|sometimes|string|in:with,only',
         ]);
 
         $selectedFields = $request->query('fields')

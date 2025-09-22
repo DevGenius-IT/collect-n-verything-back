@@ -25,7 +25,7 @@ class SubscriptionController extends Controller
 
         try {
             $page = max((int) $request->get('page', 1), 1); 
-            $perPage = min((int) $request->get('per_page', 20), 100); 
+            $perPage = min((int) $request->get('limit', 20), 100); 
 
             $options = [
                 'customer' => $user->stripe_id,
@@ -58,9 +58,9 @@ class SubscriptionController extends Controller
                 'has_more'        => $subscriptions ? $subscriptions->has_more : false,
                 'user_stripe_id'  => $user->stripe_id,
                 'current_page'    => $page,
-                'per_page'        => $perPage,
+                'limit'        => $perPage,
                 'next_page_url'   => $subscriptions && $subscriptions->has_more
-                    ? url("/api/subscriptions?page=" . ($page + 1) . "&per_page={$perPage}")
+                    ? url("/api/subscriptions?page=" . ($page + 1) . "&limit={$perPage}")
                     : null,
             ]);
         } catch (\Exception $e) {

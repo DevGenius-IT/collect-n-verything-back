@@ -506,7 +506,7 @@
 							}
 						],
 						"url": {
-							"raw": "/api/users?page=1&per_page=20",
+							"raw": "/api/users?page=1&limit=20",
 							"path": [
 								"api",
 								"users"
@@ -517,7 +517,7 @@
 									"value": "1"
 								},
 								{
-									"key": "per_page",
+									"key": "limit",
 									"value": "20"
 								}
 							]

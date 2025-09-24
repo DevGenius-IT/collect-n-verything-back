@@ -6,15 +6,15 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-  /**
-   * Seed the application's database.
-   */
-  public function run(): void
-  {
-    $this->call([
-      RolesPermissionsSeeder::class,
-      AddressSeeder::class,
-      UserSeeder::class,
-    ]);
-  }
+    public function run()
+    {
+        $this->call([
+            AddressSeeder::class,
+            UserSeeder::class,
+            SubscriptionSeeder::class,
+            WebsiteSeeder::class,
+            QuestionSeeder::class,
+            AnswerSeeder::class,
+        ]);
+    }
 }

@@ -22,22 +22,20 @@ services:
     depends_on:
       - db-test
 
-  minio-cv-test:
-    image: 'minio/minio:latest'
-    ports:
-      - "9001:9001"
-      - "8901:8901"
-    environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+  app-test:
+    image: php:8.2-fpm
+    container_name: php-test-cv
+    working_dir: /var/www/html
     volumes:
-      - "./miniotest:/data/minio"
-    command: 'minio server /data/minio --console-address ":8901"'
-    healthcheck:
-      test:
-        - CMD
-        - curl
-        - '-f'
-        - 'http://localhost:9000/minio/health/live'
-      retries: 3
-      timeout: 5s
+      - ./:/var/www/html
+    depends_on:
+      - db-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      APP_ENV: testing
+    command: >
+      sh -c "php artisan config:clear &&
+            php artisan cache:clear &&
+            php artisan test"

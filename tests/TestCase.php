@@ -36,16 +36,6 @@ abstract class TestCase extends BaseTestCase
   protected array $entityStructure;
 
   /**
-   * Get the super admin token.
-   *
-   * @return string
-   */
-  protected function getToken(): string
-  {
-    return $this->getAdminUser()->createToken("admin")->plainTextToken;
-  }
-
-  /**
    * Get the super admin user.
    *
    * @return User
@@ -56,30 +46,32 @@ abstract class TestCase extends BaseTestCase
   }
 
   /**
-   * Get the admin token.
+   * Authenticate as an admin user.
    *
-   * @return string
+   * @return void
    */
-  protected function getAdminToken(): string
+  protected function authenticateAsAdmin(): void
   {
-    return User::where("email", "admin@flippad.com")->first()->createToken("admin")->plainTextToken;
+    $adminUser = User::where("email", Env("ADMIN_EMAIL", "super-admin@flippad.com"))->first();
+    $this->actingAs($adminUser);
   }
 
   /**
-   * Get user token.
+   * Authenticate as a regular user.
    *
-   * @return string
+   * @return void
    */
-  protected function getUserToken(): string
+  protected function authenticateAsUser(): void
   {
-    return User::where("email", "user@flippad.com")->first()->createToken("user")->plainTextToken;
+    $user = User::where("email", "user@flippad.com")->first();
+    $this->actingAs($user);
   }
 
   /**
    * Get the base URL.
    *
-   * @param bool $admin
-   * @param string $path
+   * @param  bool  $admin
+   * @param  string  $path
    * @return string
    */
   protected function getBaseUrl(bool $admin = false, string $path = ""): string

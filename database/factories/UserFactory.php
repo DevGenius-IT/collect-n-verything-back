@@ -2,40 +2,58 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use App\Models\Address;
-use App\Models\School;
-use App\Models\Workplace;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
-  /**
-   * The current password being used by the factory.
-   */
-  protected static ?string $password;
+    protected $model = User::class;
 
-  /**
-   * Define the model's default state.
-   *
-   * @return array<string, mixed>
-   */
-  public function definition(): array
-  {
-    return [
-      "lastname" => fake()->lastName(),
-      "firstname" => fake()->firstName(),
-      "username" => fake()->unique()->userName(),
-      "email" => fake()->unique()->safeEmail(),
-      "enabled" => fake()->boolean(),
-      "password" => (static::$password ??= Hash::make("password")),
-      "password_requested_at" => null,
-      "phone_number" => fake()->optional()->phoneNumber(),
-      "has_newsletter" => fake()->boolean(),
-      "address_id" => fake()->optional()->numberBetween(1, Address::count()),
-    ];
-  }
+    public function definition()
+    {
+        return [
+            'lastname' => $this->faker->lastName(),
+            'firstname' => $this->faker->firstName(),
+            'username' => $this->faker->unique()->userName(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'password' => bcrypt('password'), // mot de passe par défaut pour les tests
+            'phone_number' => $this->faker->phoneNumber(),
+            'type' => $this->faker->randomElement(User::getTypes()),
+            'address_id' => Address::factory(), // crée une adresse associée
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
+    /**
+     * Optionnel : générer un utilisateur admin
+     */
+    public function admin()
+    {
+        return $this->state(fn (array $attributes) => [
+            'type' => User::TYPE_ADMIN,
+        ]);
+    }
+
+    /**
+     * Optionnel : générer un utilisateur superadmin
+     */
+    public function superAdmin()
+    {
+        return $this->state(fn (array $attributes) => [
+            'type' => User::TYPE_SUPERADMIN,
+        ]);
+    }
+
+    /**
+     * Optionnel : générer un utilisateur client
+     */
+    public function client()
+    {
+        return $this->state(fn (array $attributes) => [
+            'type' => User::TYPE_CLIENT,
+        ]);
+    }
 }

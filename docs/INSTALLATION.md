@@ -5,7 +5,6 @@
 - [Install dependencies](#install-dependencies-) 📦
 - [Environment Configuration](#environment-configuration-) 🛠️
 - [Database Setup](#database-setup-) 🗃️
-- [Minio (Simulate S3)](#minio-simulate-s3-) 🍱
 - [Run Migrations](#run-migrations-) 🚀
 - [Run Seeders](#run-seeders-) 🌱
 - [Run the Application](#run-the-application-) 🚀
@@ -54,7 +53,6 @@ The actual [`docker-compose.yml`](https://github.com/DevGenius-IT/collect-n-very
 | ------------- | ---------------- | ---- | -------- | -------- | ---------- |
 | MySQL         | db               | 3306 | root     | root     | laravel-cv |
 | Adminer       | adminer          | 8080 | root     | root     |            |
-| Minio         | minio-cv         | 9000 | minio    | password |            |
 
 > [!NOTE]
 > If want to use your own database, you can read the [Laravel documentation](https://laravel.com/docs/11.x/database#configuration) to configure your database.
@@ -62,72 +60,6 @@ The actual [`docker-compose.yml`](https://github.com/DevGenius-IT/collect-n-very
 > [!TIP]
 > I currently use [TablePlus](https://tableplus.com/) to manage my databases.
 > You can also use [MySQL Workbench](https://www.mysql.com/products/workbench/).
-
-## Minio (Simulate S3) 🍱
-
-```bash
-docker-compose up -d
-```
-
-See results [-> HERE](https://app.warp.dev/block/x9ZWHGApzL2r6imTe5Evp1)
-
-### Create a new Bucket
-<img src="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/assets/create_bucket.png" width="750" alt="Create bucket button location"/>
-
-1. Click on the `Bucket` button in sidebar menu.
-2. Click on the `Create bucket` button.
-
-<img src="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/assets/create_bucket_2.png" width="750" alt="Bucket name input field"/>
-
-3. Enter the name of the bucket.
-
-### Configure access to the bucket
-<img src="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/assets/access_bucket.png" width="750" alt="Access configuration panel"/>
-
-Click a bucket name in the list of buckets.
-
-1. Click on the `Access` button in the sidebar menu.
-2. Click on the `read-write` button present in the `Policy` section.
-
-<img src="https://github.com/DevGenius-IT/collect-n-verything-back/blob/main/docs/assets/access_bucket_2.png" width="750" alt="Raw policy editor"/>
-
-1. Click on the `Raw Policy` button in the sidebar menu.
-2. Copy the following policy and paste it into the text area.
-
-```json
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Principal": "*",
-            "Action": [
-                "s3:GetObject",
-                "s3:GetBucketLocation"
-            ],
-            "Resource": [
-                "arn:aws:s3:::*"
-            ],
-            "Condition": {
-                "StringLike": {
-                    "aws:Referer": [
-                        "http://localhost:3000/*"
-                    ]
-                }
-            }
-        }
-    ]
-}
-```
-
-3. Click on the `Save` button.
-
-> [!NOTE]
-> You can change the `aws:Referer` value to match your frontend application's URL.
-
-```bash
-docker exec -it minio-fp mc mb minio-fp
-```
 
 ## Run Migrations 🚀
 

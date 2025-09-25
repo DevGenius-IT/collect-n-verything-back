@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use App\Services\ContactService;
-use App\validators\ContactValidator;
+use App\Validators\ContactValidator;
 
 class ContactController extends CrudController
 {

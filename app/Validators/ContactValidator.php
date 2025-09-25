@@ -1,6 +1,6 @@
 <?php
 
-namespace App\validators;
+namespace App\Validators;
 
 use App\Models\Contact;
 

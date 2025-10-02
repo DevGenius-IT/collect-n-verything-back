@@ -20,17 +20,21 @@ class UserSeeder extends Seeder
         $adminUsername = env("ADMIN_USERNAME") ?? $faker->userName;
 
         if ($adminEmail && $adminPassword) {
-            $admin = User::create([
-                'username' => $adminUsername,
-                'lastname' => $adminLastname,
-                'firstname' => $adminFirstname,
-                'email' => $adminEmail,
-                'password' => bcrypt($adminPassword),
-                'phone_number' => $faker->phoneNumber,
-                'type' => 'superadmin',
-            ]);
+            $admin = User::firstOrCreate(
+                ['email' => $adminEmail],
+                [
+                    'username' => $adminUsername,
+                    'lastname' => $adminLastname,
+                    'firstname' => $adminFirstname,
+                    'password' => bcrypt($adminPassword),
+                    'phone_number' => $faker->phoneNumber,
+                    'type' => 'superadmin',
+                ]
+            );
 
-            $admin->createAsStripeCustomer();
+            if (!$admin->stripe_id) {
+                $admin->createAsStripeCustomer();
+            }
         }
 
         foreach (range(1, 20) as $index) {
